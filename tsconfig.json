@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "esnext",
+        "sourceMap": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "watch": true,
+        "importHelpers": true,
+        "declaration": true,
+        "declarationDir": "./types",
+        "lib": [
+            "esnext",
+            "dom",
+            "dom.iterable",
+            "scripthost"
+        ]
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "views",
+        "static",
+        "node_modules"
+    ]
+}
