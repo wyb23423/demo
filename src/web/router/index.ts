@@ -1,7 +1,7 @@
 import Route from './route';
 import Layer from './layer';
 import { HTTPMethods, HTTPMethodName } from '../utils/htpp-methods';
-import { Handler, Next } from '../typings';
+import { Handler, Next, ErrorHandler } from '../typings';
 import { IncomingMessage, ServerResponse, METHODS } from 'http';
 import { SKIP_ROUTER, SKIP_ROUTE } from '../constant';
 
@@ -20,6 +20,23 @@ export default class Router extends HTTPMethods<Router> {
     public all(path: string, handler: Handler) {
         const route = this.route(path);
         METHODS.forEach(method => route[<HTTPMethodName>method.toLocaleLowerCase()](handler));
+
+        return this;
+    }
+
+    public use(pathOrHandler: string | Handler | ErrorHandler, handler?: Handler | ErrorHandler) {
+        let path = '';
+        typeof pathOrHandler === 'function'
+            ? handler = pathOrHandler
+            : path = pathOrHandler;
+
+        if (!handler) {
+            return console.warn('中间件为空');
+        }
+
+        const layer = new Layer(handler, path);
+        layer.isMiddleware = true;
+        this.routes.push(layer);
 
         return this;
     }

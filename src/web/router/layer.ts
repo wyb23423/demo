@@ -3,6 +3,8 @@ import * as pathToRegexp from 'path-to-regexp';
 import { IncomingMessage, ServerResponse } from 'http';
 
 export default class Layer {
+    public isMiddleware: boolean = false;
+
     private keys: pathToRegexp.Key[] = [];
     private regexp!: RegExp;
 

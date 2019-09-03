@@ -5,6 +5,29 @@ type Method<T> = (pathOrHandler: string | Handler, handler?: Handler) => T;
 
 export type HTTPMethodName = 'get' | 'post' | 'put' | 'head' | 'delete' | 'options' | 'trace' | 'copy' | 'lock' | 'mkcol' | 'move' | 'purge' | 'propfind' | 'proppatch' | 'unlock' | 'report' | 'mkactivity' | 'checkout' | 'merge' | 'notify' | 'subscribe' | 'unsubscribe' | 'patch' | 'search' | 'connect' | 'm-search';
 
+// export default function AddHTTPMethods(
+//     fn: (method: HTTPMethodName, handler: Handler, path: string) => any
+// ) {
+//     // tslint:disable-next-line:ban-types
+//     return (target: Function) => {
+//         METHODS.forEach(method => {
+//             method = method.toLocaleLowerCase();
+
+//             Reflect.set(target.prototype, method, function(pathOrHandler: string | Handler, handler?: Handler) {
+//                 handler = typeof pathOrHandler === 'function' ? pathOrHandler : handler;
+//                 if (handler) {
+//                     fn.call(this, <HTTPMethodName>method, handler, <string>pathOrHandler);
+//                 } else {
+//                     console.warn('处理函数为空!');
+//                 }
+
+//                 return this;
+//             });
+//         });
+//     };
+// }
+
+
 export class HTTPMethods<T> {
     public get!: Method<T>;
     public post!: Method<T>;

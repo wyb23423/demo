@@ -1,7 +1,7 @@
 import { createServer, METHODS, IncomingMessage, ServerResponse } from 'http';
 import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 import Router from './router/index';
-import { Handler } from './typings';
+import { Handler, ErrorHandler } from './typings';
 
 export default class Aplication extends HTTPMethods<Aplication> {
     private router = new Router();
@@ -18,14 +18,14 @@ export default class Aplication extends HTTPMethods<Aplication> {
         return this;
     }
 
-    public listen(port?: number, hostname?: string, backlog?: number, listeningListener?: () => void) {
-        createServer(this.handle.bind(this)).listen(port, hostname, backlog, listeningListener);
-
+    public use(pathOrHandler: string | Handler | ErrorHandler, handler?: Handler | ErrorHandler) {
+        this.router.use(pathOrHandler, handler);
         return this;
     }
 
-    public use() {
-        //
+    public listen(port?: number, hostname?: string, backlog?: number, listeningListener?: () => void) {
+        createServer(this.handle.bind(this)).listen(port, hostname, backlog, listeningListener);
+        return this;
     }
 
     public set() {

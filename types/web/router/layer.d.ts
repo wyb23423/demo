@@ -4,6 +4,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 export default class Layer {
     private handler;
     method?: string | undefined;
+    isMiddleware: boolean;
     private keys;
     private regexp;
     constructor(handler: Handler | ErrorHandler, path?: string, method?: string | undefined);

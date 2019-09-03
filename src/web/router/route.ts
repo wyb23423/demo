@@ -13,7 +13,7 @@ export default class Route extends HTTPMethods<Route> {
 
     public dispatch(req: IncomingMessage, res: ServerResponse, done: Next) {
         let index: number = 0;
-        console.log(this.stack);
+
         const next = (err?: string | Error) => {
             // 跳过当前路由
             if (err === SKIP_ROUTE) {
