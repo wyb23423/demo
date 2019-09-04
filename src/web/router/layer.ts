@@ -6,11 +6,11 @@ export default class Layer {
     public isMiddleware: boolean = false;
 
     private keys: pathToRegexp.Key[] = [];
-    private regexp!: RegExp;
+    private regexp?: RegExp;
 
     constructor(
         private handler: Handler | ErrorHandler,
-        path?: string,
+        private path?: string,
         public method?: string
     ) {
         path && (this.regexp = pathToRegexp(path, this.keys));
@@ -18,7 +18,17 @@ export default class Layer {
 
     // 路由匹配
     public match(path: string) {
-        return this.regexp.test(path);
+        // ===========================中间件
+        if (this.isMiddleware) {
+            return false;
+        }
+
+        // ===============================
+        if (this.regexp) {
+            return this.regexp.test(path);
+        }
+
+        return true;
     }
 
     // 执行处理函数

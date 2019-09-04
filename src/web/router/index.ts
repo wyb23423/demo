@@ -8,15 +8,6 @@ import { SKIP_ROUTER, SKIP_ROUTE } from '../constant';
 export default class Router extends HTTPMethods<Router> {
     private routes: Layer[] = [];
 
-    constructor() {
-        super(
-            (method: HTTPMethodName, handler: Handler, path: string) => {
-                const route = this.route(path);
-                route[method] && route[method](handler);
-            }
-        );
-    }
-
     public all(path: string, handler: Handler) {
         const route = this.route(path);
         METHODS.forEach(method => route[<HTTPMethodName>method.toLocaleLowerCase()](handler));
@@ -85,5 +76,10 @@ export default class Router extends HTTPMethods<Router> {
         };
 
         next();
+    }
+
+    public setHTTPMethos(method: HTTPMethodName, handler: Handler, path: string) {
+        const route = this.route(path);
+        route[method] && route[method](handler);
     }
 }

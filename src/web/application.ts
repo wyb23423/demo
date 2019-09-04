@@ -1,17 +1,10 @@
-import { createServer, METHODS, IncomingMessage, ServerResponse } from 'http';
+import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 import Router from './router/index';
 import { Handler, ErrorHandler } from './typings';
 
 export default class Aplication extends HTTPMethods<Aplication> {
     private router = new Router();
-
-    constructor() {
-        super(
-            (method: HTTPMethodName, handler: Handler, path: string) =>
-                this.router[method] && this.router[method](path, handler)
-        );
-    }
 
     public all(path: string, handler: Handler) {
         this.router.all(path, handler);
@@ -34,6 +27,10 @@ export default class Aplication extends HTTPMethods<Aplication> {
 
     public static() {
         //
+    }
+
+    public setHTTPMethos(method: HTTPMethodName, handler: Handler, path: string) {
+        this.router[method] && this.router[method](path, handler);
     }
 
     private handle(req: IncomingMessage, res: ServerResponse) {

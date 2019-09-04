@@ -2,13 +2,13 @@ import { Next, Handler } from '../typings';
 import Layer from './layer';
 import { IncomingMessage, ServerResponse } from 'http';
 import { SKIP_ROUTE, SKIP_ROUTER } from '../constant';
-import { HTTPMethods } from '../utils/htpp-methods';
+import { HTTPMethods, HTTPMethodName } from '../utils/htpp-methods';
 
-export default class Route extends HTTPMethods<Route> {
+export default class Route extends HTTPMethods<Route, Handler, void> {
     private stack: Layer[] = [];
 
     constructor(public path?: string) {
-        super((method: string, handler: Handler) => this.stack.push(new Layer(handler, undefined, method)));
+        super();
     }
 
     public dispatch(req: IncomingMessage, res: ServerResponse, done: Next) {
@@ -40,5 +40,9 @@ export default class Route extends HTTPMethods<Route> {
         };
 
         next();
+    }
+
+    public setHTTPMethos(method: HTTPMethodName, handler: Handler) {
+        this.stack.push(new Layer(handler, undefined, method));
     }
 }
