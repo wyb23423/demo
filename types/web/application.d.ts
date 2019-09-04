@@ -1,5 +1,5 @@
-import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 import { Handler, ErrorHandler } from './typings';
+import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 export default class Aplication extends HTTPMethods<Aplication> {
     private router;
     all(path: string, handler: Handler): this;

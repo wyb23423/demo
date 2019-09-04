@@ -1,11 +1,10 @@
 /**
  * 路由级中间件
  */
+import { CResponse, Next, CRequest } from '../typings';
 import BaseRouter from '../router';
-import { IncomingMessage, ServerResponse } from 'http';
-import { Next } from '../typings';
 
-type Dispatch = (req: IncomingMessage, res: ServerResponse, done: Next) => void;
+type Dispatch = (req: CResponse, res: CRequest, done: Next) => void;
 
 export default function Router(): BaseRouter & Dispatch & { isRouter: true } {
     const router = new BaseRouter();

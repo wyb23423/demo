@@ -1,7 +1,9 @@
+import { Handler, ErrorHandler, CResponse, CRequest } from './typings';
+
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 import Router from './router/index';
-import { Handler, ErrorHandler } from './typings';
+import response from './middleware/response';
 
 export default class Aplication extends HTTPMethods<Aplication> {
     private router = new Router();
@@ -17,7 +19,11 @@ export default class Aplication extends HTTPMethods<Aplication> {
     }
 
     public listen(port?: number, hostname?: string, backlog?: number, listeningListener?: () => void) {
-        createServer(this.handle.bind(this)).listen(port, hostname, backlog, listeningListener);
+        createServer((req: IncomingMessage, res: ServerResponse) => {
+            Object.setPrototypeOf(req, response);
+            this.handle(<CResponse>req, <CRequest>res);
+        })
+            .listen(port, hostname, backlog, listeningListener);
         return this;
     }
 
@@ -33,8 +39,8 @@ export default class Aplication extends HTTPMethods<Aplication> {
         this.router[method] && this.router[method](path, handler);
     }
 
-    private handle(req: IncomingMessage, res: ServerResponse) {
-        req.method = req.method && req.method.toLowerCase();
+    private handle(req: CResponse, res: CRequest) {
+        req.init();
 
         this.router.dispatch(req, res, (err: any) => {
             res.writeHead(404, { 'Content-Type': 'text/plain' });

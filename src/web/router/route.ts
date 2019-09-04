@@ -1,6 +1,5 @@
-import { Next, Handler } from '../typings';
+import { Next, Handler, CRequest, CResponse } from '../typings';
 import Layer from './layer';
-import { IncomingMessage, ServerResponse } from 'http';
 import { SKIP_ROUTE, SKIP_ROUTER } from '../constant';
 import { HTTPMethods, HTTPMethodName } from '../utils/htpp-methods';
 
@@ -11,7 +10,7 @@ export default class Route extends HTTPMethods<Route, Handler, void> {
         super();
     }
 
-    public dispatch(req: IncomingMessage, res: ServerResponse, done: Next) {
+    public dispatch(req: CResponse, res: CRequest, done: Next) {
         let index: number = 0;
 
         const next = (err?: string | Error) => {

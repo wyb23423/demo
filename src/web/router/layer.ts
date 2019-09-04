@@ -1,6 +1,5 @@
-import { Handler, ErrorHandler, Next } from '../typings';
+import { Handler, ErrorHandler, Next, CResponse, CRequest } from '../typings';
 import * as pathToRegexp from 'path-to-regexp';
-import { IncomingMessage, ServerResponse } from 'http';
 
 export default class Layer {
     public isMiddleware: boolean = false;
@@ -32,7 +31,7 @@ export default class Layer {
     }
 
     // 执行处理函数
-    public doRequest(req: IncomingMessage, res: ServerResponse, next: Next) {
+    public doRequest(req: CResponse, res: CRequest, next: Next) {
         try {
             (<Handler>this.handler)(req, res, next);
         } catch (e) {
@@ -41,7 +40,7 @@ export default class Layer {
     }
 
     // 执行错误处理中间件
-    public doError(err: any, req: IncomingMessage, res: ServerResponse, next: Next) {
+    public doError(err: any, req: CResponse, res: CRequest, next: Next) {
         const fn = this.handler;
 
         // 不是错误处理中间件

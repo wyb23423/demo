@@ -1,6 +1,4 @@
-/// <reference types="node" />
-import { Handler, ErrorHandler, Next } from '../typings';
-import { IncomingMessage, ServerResponse } from 'http';
+import { Handler, ErrorHandler, Next, CResponse, CRequest } from '../typings';
 export default class Layer {
     private handler;
     private path?;
@@ -10,6 +8,6 @@ export default class Layer {
     private regexp?;
     constructor(handler: Handler | ErrorHandler, path?: string | undefined, method?: string | undefined);
     match(path: string): boolean;
-    doRequest(req: IncomingMessage, res: ServerResponse, next: Next): void;
-    doError(err: any, req: IncomingMessage, res: ServerResponse, next: Next): void;
+    doRequest(req: CResponse, res: CRequest, next: Next): void;
+    doError(err: any, req: CResponse, res: CRequest, next: Next): void;
 }

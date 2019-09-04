@@ -1,16 +1,8 @@
 import { IncomingMessage } from 'http';
 import { parse } from 'url';
-import { ParsedUrlQuery } from 'querystring';
+import { CResponse } from '../typings';
 
-export interface CResponse extends IncomingMessage {
-    query: ParsedUrlQuery;
-    originUrl: string;
-    params: ParsedUrlQuery;
-
-    init(): void;
-}
-
-const req: CResponse = Object.assign(
+const response: CResponse = Object.assign(
     Object.create(IncomingMessage),
     {
         query: {},
@@ -18,7 +10,9 @@ const req: CResponse = Object.assign(
         params: {}
     }
 );
-req.init = function (this: CResponse) {
+
+// tslint:disable-next-line:space-before-function-paren
+response.init = function (this: CResponse) {
     const url = this.url || '/';
     const pathInfo = parse(url, true);
 
@@ -27,4 +21,4 @@ req.init = function (this: CResponse) {
     this.method = (this.method || '').toLowerCase();
 };
 
-export default req;
+export default response;

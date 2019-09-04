@@ -1,8 +1,8 @@
 import Route from './route';
 import Layer from './layer';
 import { HTTPMethods, HTTPMethodName } from '../utils/htpp-methods';
-import { Handler, Next, ErrorHandler } from '../typings';
-import { IncomingMessage, ServerResponse, METHODS } from 'http';
+import { Handler, Next, ErrorHandler, CResponse, CRequest } from '../typings';
+import { METHODS } from 'http';
 import { SKIP_ROUTER, SKIP_ROUTE } from '../constant';
 
 export default class Router extends HTTPMethods<Router> {
@@ -46,7 +46,7 @@ export default class Router extends HTTPMethods<Router> {
         return route;
     }
 
-    public dispatch(req: IncomingMessage, res: ServerResponse, done: Next) {
+    public dispatch(req: CResponse, res: CRequest, done: Next) {
         let index: number = 0;
 
         const next = (err?: string | Error) => {
