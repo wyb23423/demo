@@ -2,8 +2,10 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { ParsedUrlQuery } from 'querystring';
 export interface CResponse extends IncomingMessage {
+    url: string;
     query: ParsedUrlQuery;
     originUrl: string;
+    parentUrl: string;
     params: ParsedUrlQuery;
     init(): void;
 }

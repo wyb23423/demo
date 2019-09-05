@@ -1,9 +1,11 @@
 import { Handler, ErrorHandler, Next, CResponse, CRequest } from '../typings';
 import * as pathToRegexp from 'path-to-regexp';
+import { ParsedUrlQuery } from 'querystring';
 
 export default class Layer {
     public isMiddleware: boolean = false;
 
+    private length: number = 0;
     private keys: pathToRegexp.Key[] = [];
     private regexp?: RegExp;
 
@@ -12,28 +14,64 @@ export default class Layer {
         private path?: string,
         public method?: string
     ) {
-        path && (this.regexp = pathToRegexp(path, this.keys));
+        if (path) {
+            this.regexp = pathToRegexp(path, this.keys);
+            this.length = path.split('/').length;
+        }
     }
 
     // 路由匹配
     public match(path: string) {
+        if (!this.path) {
+            return { params: {}, url: path };
+        }
+
         // ===========================中间件
         if (this.isMiddleware) {
-            return false;
+            const names = path.split('/');
+
+            if (this.length < names.length) {
+                names.length = this.length;
+                path = names.join('/');
+            }
         }
 
-        // ===============================
-        if (this.regexp) {
-            return this.regexp.test(path);
-        }
+        // =======================匹配并获取参数
+        const res = this.regexp && path.match(this.regexp);
+        if (res) {
+            const params: ParsedUrlQuery = {};
+            for (let i = 1; i < res.length; i++) {
+                const name = this.keys[i - 1].name;
 
-        return true;
+                let val = params[name];
+                if (val) {
+                    val = Array.isArray(val) ? val : [val];
+                    val.push(res[i]);
+                } else {
+                    val = res[i];
+                }
+
+                params[name] = val;
+            }
+
+            return { params, url: path };
+        }
     }
 
     // 执行处理函数
     public doRequest(req: CResponse, res: CRequest, next: Next) {
         try {
+            const parent = req.parentUrl;
+            // 路由级中间件
+            if (this.isMiddleware && (<any>this.handler).isRouter) {
+                req.parentUrl = parent + req.url;
+                req.url = req.originUrl.substr(parent.length + req.url.length);
+            }
+
             (<Handler>this.handler)(req, res, next);
+
+            req.url = req.originUrl.substr(parent.length);
+            req.parentUrl = parent;
         } catch (e) {
             next(e);
         }

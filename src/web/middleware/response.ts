@@ -3,10 +3,11 @@ import { parse } from 'url';
 import { CResponse } from '../typings';
 
 const response: CResponse = Object.assign(
-    Object.create(IncomingMessage),
+    Object.create(IncomingMessage.prototype),
     {
         query: {},
         originUrl: '',
+        parentUrl: '',
         params: {}
     }
 );
@@ -18,6 +19,7 @@ response.init = function (this: CResponse) {
 
     this.query = pathInfo.query;
     this.url = this.originUrl = pathInfo.pathname || '/';
+
     this.method = (this.method || '').toLowerCase();
 };
 

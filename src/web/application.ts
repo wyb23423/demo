@@ -44,7 +44,7 @@ export default class Aplication extends HTTPMethods<Aplication> {
 
         this.router.dispatch(req, res, (err: any) => {
             res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end(err || 'Not Found: ' + req.method + ' ' + req.url);
+            res.end(err || 'Not Found: ' + req.method + ' ' + req.originUrl);
         });
     }
 }

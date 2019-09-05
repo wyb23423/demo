@@ -64,7 +64,11 @@ export default class Router extends HTTPMethods<Router> {
                 return done(err);
             }
 
-            if (req.url && layer.match(req.url)) {
+            const result = layer.match(req.url);
+            if (result) {
+                Object.assign(req.params, result.params);
+                req.url = result.url;
+
                 if (err) {
                     layer.doError(err, req, res, next);
                 } else {
