@@ -7,9 +7,12 @@
   },
   "devDependencies": {
     "@types/node": "^12.7.2",
+    "@types/request": "^2.48.2",
     "path-to-regexp": "^3.0.0",
     "tslint": "^5.19.0",
     "typescript": "^3.5.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "request": "^2.88.0"
+  }
 }
