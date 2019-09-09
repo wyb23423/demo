@@ -10,8 +10,6 @@
         "outDir": "./dist",
         "watch": true,
         "importHelpers": true,
-        "declaration": true,
-        "declarationDir": "./types",
         "lib": [
             "esnext",
             "dom",

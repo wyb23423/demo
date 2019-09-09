@@ -4,6 +4,7 @@ import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 import Router from './router/index';
 import request from './middleware/request';
+import response from './middleware/response';
 
 export default class Aplication extends HTTPMethods<Aplication> {
     private router = new Router();
@@ -21,9 +22,12 @@ export default class Aplication extends HTTPMethods<Aplication> {
     public listen(port?: number, hostname?: string, backlog?: number, listeningListener?: () => void) {
         createServer((req: IncomingMessage, res: ServerResponse) => {
             Object.setPrototypeOf(req, request);
+            Object.setPrototypeOf(res, response);
+
             this.handle(<CRequest>req, <CResponse>res);
         })
             .listen(port, hostname, backlog, listeningListener);
+
         return this;
     }
 
@@ -42,9 +46,8 @@ export default class Aplication extends HTTPMethods<Aplication> {
     private handle(req: CRequest, res: CResponse) {
         req.init();
 
-        this.router.dispatch(req, res, (err: any) => {
-            res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end(err || 'Not Found: ' + req.method + ' ' + req.originUrl);
-        });
+        this.router.dispatch(
+            req, res, err => res.status(404).send(err || `Not Found: ${req.method} ${req.originUrl}`)
+        );
     }
 }
