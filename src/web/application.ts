@@ -3,7 +3,7 @@ import { Handler, ErrorHandler, CResponse, CRequest } from './typings';
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 import Router from './router/index';
-import response from './middleware/request';
+import request from './middleware/request';
 
 export default class Aplication extends HTTPMethods<Aplication> {
     private router = new Router();
@@ -20,7 +20,7 @@ export default class Aplication extends HTTPMethods<Aplication> {
 
     public listen(port?: number, hostname?: string, backlog?: number, listeningListener?: () => void) {
         createServer((req: IncomingMessage, res: ServerResponse) => {
-            Object.setPrototypeOf(req, response);
+            Object.setPrototypeOf(req, request);
             this.handle(<CRequest>req, <CResponse>res);
         })
             .listen(port, hostname, backlog, listeningListener);
