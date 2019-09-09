@@ -59,7 +59,7 @@ export default class Layer {
     }
 
     // 执行处理函数
-    public doRequest(req: CResponse, res: CRequest, next: Next) {
+    public doRequest(req: CRequest, res: CResponse, next: Next) {
         try {
             const parent = req.parentUrl;
             // 路由级中间件
@@ -78,7 +78,7 @@ export default class Layer {
     }
 
     // 执行错误处理中间件
-    public doError(err: any, req: CResponse, res: CRequest, next: Next) {
+    public doError(err: any, req: CRequest, res: CResponse, next: Next) {
         const fn = this.handler;
 
         // 不是错误处理中间件

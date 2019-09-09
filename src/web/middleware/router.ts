@@ -4,7 +4,7 @@
 import { CResponse, Next, CRequest } from '../typings';
 import BaseRouter from '../router';
 
-type Dispatch = (req: CResponse, res: CRequest, done: Next) => void;
+type Dispatch = (req: CRequest, res: CResponse, done: Next) => void;
 
 export default function Router(): BaseRouter & Dispatch & { isRouter: true } {
     const router = new BaseRouter();

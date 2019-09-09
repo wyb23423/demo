@@ -10,7 +10,7 @@ export default class Route extends HTTPMethods<Route, Handler, void> {
         super();
     }
 
-    public dispatch(req: CResponse, res: CRequest, done: Next) {
+    public dispatch(req: CRequest, res: CResponse, done: Next) {
         let index: number = 0;
 
         const next = (err?: string | Error) => {

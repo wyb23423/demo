@@ -14,6 +14,6 @@ export default class Layer {
         params: ParsedUrlQuery;
         url: string;
     } | undefined;
-    doRequest(req: CResponse, res: CRequest, next: Next): void;
-    doError(err: any, req: CResponse, res: CRequest, next: Next): void;
+    doRequest(req: CRequest, res: CResponse, next: Next): void;
+    doError(err: any, req: CRequest, res: CResponse, next: Next): void;
 }

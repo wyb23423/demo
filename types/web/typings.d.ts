@@ -12,6 +12,6 @@ export interface CResponse extends IncomingMessage {
 export interface CRequest extends ServerResponse {
     send(msg: any): void;
 }
-export declare type Handler = (req: CResponse, res: CRequest, next: Next) => void;
-export declare type ErrorHandler = (err: any, req: CResponse, res: CRequest, next: Next) => void;
+export declare type Handler = (req: CRequest, res: CResponse, next: Next) => void;
+export declare type ErrorHandler = (err: any, req: CRequest, res: CResponse, next: Next) => void;
 export declare type Next = (err?: string | Error) => void;

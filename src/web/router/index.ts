@@ -46,7 +46,7 @@ export default class Router extends HTTPMethods<Router> {
         return route;
     }
 
-    public dispatch(req: CResponse, res: CRequest, done: Next) {
+    public dispatch(req: CRequest, res: CResponse, done: Next) {
         let index: number = 0;
 
         const next = (err?: string | Error) => {

@@ -6,6 +6,6 @@ export default class Router extends HTTPMethods<Router> {
     all(path: string, handler: Handler): this;
     use(pathOrHandler: string | Handler | ErrorHandler, handler?: Handler | ErrorHandler): void | this;
     route(path: string): Route;
-    dispatch(req: CResponse, res: CRequest, done: Next): void;
+    dispatch(req: CRequest, res: CResponse, done: Next): void;
     setHTTPMethos(method: HTTPMethodName, handler: Handler, path: string): void;
 }

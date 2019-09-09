@@ -1,8 +1,8 @@
 import { IncomingMessage } from 'http';
 import { parse } from 'url';
-import { CResponse } from '../typings';
+import { CRequest } from '../typings';
 
-const response: CResponse = Object.assign(
+const request: CRequest = Object.assign(
     Object.create(IncomingMessage.prototype),
     {
         query: {},
@@ -13,7 +13,7 @@ const response: CResponse = Object.assign(
 );
 
 // tslint:disable-next-line:space-before-function-paren
-response.init = function (this: CResponse) {
+request.init = function (this: CRequest) {
     const url = this.url || '/';
     const pathInfo = parse(url, true);
 
@@ -23,4 +23,4 @@ response.init = function (this: CResponse) {
     this.method = (this.method || '').toLowerCase();
 };
 
-export default response;
+export default request;

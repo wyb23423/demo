@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { ParsedUrlQuery } from 'querystring';
 
-export interface CResponse extends IncomingMessage {
+export interface CRequest extends IncomingMessage {
     url: string;
     query: ParsedUrlQuery;
     originUrl: string;
@@ -11,12 +11,12 @@ export interface CResponse extends IncomingMessage {
     init(): void;
 }
 
-export interface CRequest extends ServerResponse {
+export interface CResponse extends ServerResponse {
     send(msg: any): void;
 }
 
-export type Handler = (req: CResponse, res: CRequest, next: Next) => void;
-export type ErrorHandler = (err: any, req: CResponse, res: CRequest, next: Next) => void;
+export type Handler = (req: CRequest, res: CResponse, next: Next) => void;
+export type ErrorHandler = (err: any, req: CRequest, res: CResponse, next: Next) => void;
 
 export type Next = (err?: string | Error) => void;
 
