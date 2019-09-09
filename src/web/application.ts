@@ -47,7 +47,7 @@ export default class Aplication extends HTTPMethods<Aplication> {
         req.init();
 
         this.router.dispatch(
-            req, res, err => res.status(404).send(err || `Not Found: ${req.method} ${req.originUrl}`)
+            req, res, err => res.status(404).end(err || `Not Found: ${req.method} ${req.originUrl}`)
         );
     }
 }
