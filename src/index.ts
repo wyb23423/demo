@@ -1,5 +1,5 @@
-import createApplication from './web/index';
-import Router from './web/middleware/router';
+import createApplication from './web-router/index';
+import Router from './web-router/middleware/router';
 
 const app = createApplication();
 
