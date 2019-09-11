@@ -5,6 +5,7 @@ import { HTTPMethods, HTTPMethodName } from './utils/htpp-methods';
 import Router from './router/index';
 import request from './middleware/request';
 import response from './middleware/response';
+import { promises } from 'fs';
 
 export default class Aplication extends HTTPMethods<Aplication> {
     private router = new Router();
@@ -32,10 +33,6 @@ export default class Aplication extends HTTPMethods<Aplication> {
     }
 
     public set() {
-        //
-    }
-
-    public static() {
         //
     }
 
