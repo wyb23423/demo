@@ -2,7 +2,7 @@ import { queryMultiple } from './index';
 
 function createBaseData() {
     const baseValues = [];
-    for (let i = 1; i <= 2; i++) {
+    for (let i = 1; i <= 100; i++) {
         const data = [
             [503, 2117],
             [2885, 2117],
