@@ -11,14 +11,14 @@ function createBaseData() {
         ];
 
         baseValues.push(...[23, 15, 25, 30].map((c, j) => (
-            ['A00000' + c, i.toString(16).padStart(4, '0').toUpperCase(), '192.168.1.' + c, +(j === 0), 22, j ? '0.00000000320189580915' : '0.00050025131130394492', ...data[j], 100, 4, 3, '测试', '2018-09-25 09:47:52', null, null, '测试', '22', null, null, null, null, null, null, null, null].map(v => v == null ? v : v + '')
+            ['A00000' + c, i.toString(16).padStart(4, '0').toUpperCase(), '192.168.1.' + c, +(j === 0), j ? '0.00000000320189580915' : '0.00050025131130394492', ...data[j], 100, '测试'].map(v => v == null ? v : v + '')
         )));
     }
 
     return baseValues;
 }
 
-function createTagData() {
+export function createTagData() {
     const values = [];
     for (let i = 1; i <= 500; i++) {
         values.push(...new Array(100).fill(0).map((v, j) => {
@@ -34,16 +34,28 @@ function createTagData() {
     return values;
 }
 
+function createGroupData() {
+    return new Array(100).fill(1).map((v, i) => [(i + v).toString(16).padStart(4, '0').toUpperCase(), 4, 4, 1, 22]);
+}
+
 export default async function test() {
     console.log('start....');
 
-    await queryMultiple(['truncate table pos_base_station', 'truncate table pos_tag']);
+    await queryMultiple(['pos_base_station', 'pos_tag', 'pos_base_group'].map(v => `truncate table ${v}`));
 
     console.log('truncate end....');
 
-    const baseSql = 'INSERT INTO `pos_base_station` (`base_no`, `group_code`, `ip`, `main`, `algorithm_type`, `time_correction_value`, `coordx`, `coordy`, `coordz`, `group_base_size`, `min_base_size`, `name`, `install_time`, `description`, `upload_type`, `location`, `zone`, `owner`, `work`, `lose_rate`, `alarm`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ?';
-    const tagSql = 'INSERT INTO `pos_tag` (`tag_no`, `type`, `name`, `photo`) VALUES ?';
-    await queryMultiple([baseSql, tagSql], [[createBaseData()], [createTagData()]]);
+    const baseSql = 'insert into `pos_base_station` (`base_no`, `group_code`, `ip`, `main`, `time_correction_value`, `coordx`, `coordy`, `coordz`, `name`) values ?';
+    const tagSql = 'insert into `pos_tag` (`tag_no`, `type`, `name`, `photo`) values ?';
+    const groupSql = 'insert into `pos_base_group` (`group_code`, `group_base_size`, `min_base_size`, `map_id`, `algorithm_type`) values ?';
+    await queryMultiple(
+        [baseSql, tagSql, groupSql],
+        [
+            [createBaseData()],
+            [createTagData()],
+            [createGroupData()]
+        ]
+    );
 
     console.log('end....');
 }

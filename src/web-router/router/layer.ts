@@ -1,5 +1,5 @@
 import { Handler, ErrorHandler, Next, CResponse, CRequest } from '../typings';
-import * as pathToRegexp from 'path-to-regexp';
+import pathToRegexp from 'path-to-regexp';
 import { ParsedUrlQuery } from 'querystring';
 
 export default class Layer {

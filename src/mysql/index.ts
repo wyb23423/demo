@@ -1,4 +1,4 @@
-import * as mysql from 'mysql';
+import mysql from 'mysql';
 import databaseConfig from './mysql.config';
 
 export async function query(sql: string, params: any) {
@@ -56,6 +56,7 @@ function end(connection: mysql.Connection) {
         connection.end((err: mysql.MysqlError | null) => {
             if (err) {
                 console.log('关闭数据库连接失败！');
+                connection.destroy();
                 return reject(err);
             }
 
@@ -73,6 +74,7 @@ function doQuery(
         connection.query(sql, params, (err: mysql.MysqlError | null, results?: any, fields?: mysql.FieldInfo[]) => {
             if (err) {
                 console.log('数据操作失败');
+                connection.destroy();
                 return reject(err);
             }
 

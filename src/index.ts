@@ -12,7 +12,5 @@
 // app.use('/test', router2);
 
 // app.listen(8082);
-
 import test from './mysql/demo';
 test();
-
