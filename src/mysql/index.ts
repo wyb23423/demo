@@ -20,7 +20,7 @@ export async function query(sql: string, params: any) {
     return end(connection).then(() => data);
 }
 
-export async function queryMultiple(sqls: string[], values: any[]) {
+export async function queryMultiple(sqls: string[], values: any[] = []) {
     const connection = mysql.createConnection(databaseConfig);
 
     try {

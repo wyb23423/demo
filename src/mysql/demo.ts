@@ -34,10 +34,16 @@ function createTagData() {
     return values;
 }
 
-export default function test() {
+export default async function test() {
+    console.log('start....');
+
+    await queryMultiple(['truncate table pos_base_station', 'truncate table pos_tag']);
+
+    console.log('truncate end....');
+
     const baseSql = 'INSERT INTO `pos_base_station` (`base_no`, `group_code`, `ip`, `main`, `algorithm_type`, `time_correction_value`, `coordx`, `coordy`, `coordz`, `group_base_size`, `min_base_size`, `name`, `install_time`, `description`, `upload_type`, `location`, `zone`, `owner`, `work`, `lose_rate`, `alarm`, `create_user`, `create_time`, `update_user`, `update_time`) VALUES ?';
-
     const tagSql = 'INSERT INTO `pos_tag` (`tag_no`, `type`, `name`, `photo`) VALUES ?';
+    await queryMultiple([baseSql, tagSql], [[createBaseData()], [createTagData()]]);
 
-    queryMultiple([baseSql, tagSql], [[createBaseData()], [createTagData()]]);
+    console.log('end....');
 }
