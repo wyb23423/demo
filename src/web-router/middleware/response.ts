@@ -7,7 +7,7 @@ const response: CResponse = Object.create(ServerResponse.prototype);
 // response.send = function (this: CResponse, body: any, encoding?: string) {
 //     return new Promise(resolve => encoding ? this.end(body, encoding, resolve) : this.end(body, resolve));
 // };
-response.json = function (this: CResponse, body: IAnyObject, encoding?: string) {
+response.json = function (this: CResponse, body: Record<string, any>, encoding?: string) {
     this.setHeader('Content-Type', 'application/json');
 
     return new Promise(resolve =>
@@ -19,8 +19,8 @@ response.status = function (this: CResponse, code: number) {
 
     return this;
 };
-response.set = function (this: CResponse, nameOrVal: string | IAnyObject<HeaderVal>, val?: HeaderVal) {
-    let data: IAnyObject<HeaderVal> = {};
+response.set = function (this: CResponse, nameOrVal: string | Record<string, HeaderVal>, val?: HeaderVal) {
+    let data: Record<string, HeaderVal> = {};
     if (typeof nameOrVal === 'string') {
         if (val == null) {
             return this;
