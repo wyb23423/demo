@@ -43,7 +43,7 @@ export function parsePosition1(data: number[][]) {
 }
 
 export function parsePosition2(data: number[][]) {
-    return JSON.stringify({ coordinates: data.map(v => ({ xaixs: v[0], yaixs: v[1], zaixs: 1 })) });
+    return JSON.stringify({ coordinates: data.map(v => ({ xaxis: v[0], yaxis: v[1], zaxis: 1 })) });
 }
 
 export default async function setBaseAndZone() {
