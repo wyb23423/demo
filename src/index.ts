@@ -13,5 +13,5 @@
 
 // app.listen(8082);
 
-import setBaseAndZone from './mysql/demo2';
-setBaseAndZone();
+import test from './mysql/demo';
+test();

@@ -73,7 +73,7 @@ function doQuery(
     return new Promise((resolve, reject) => {
         connection.query(sql, params, (err: mysql.MysqlError | null, results?: any, fields?: mysql.FieldInfo[]) => {
             if (err) {
-                console.log('数据操作失败');
+                console.log('数据操作失败:' + sql);
                 connection.destroy();
                 return reject(err);
             }

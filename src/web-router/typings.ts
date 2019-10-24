@@ -13,10 +13,10 @@ export interface CRequest extends IncomingMessage {
 
 export interface CResponse extends ServerResponse {
     // send(body: any, encoding?: string): Promise<void>;
-    json(body: IAnyObject, encoding?: string): Promise<void>;
+    json(body: Record<string, any>, encoding?: string): Promise<void>;
     status(code: number): CResponse;
     set(name: string, val: HeaderVal): CResponse;
-    set(val: IAnyObject<HeaderVal>): CResponse;
+    set(val: Record<string, HeaderVal>): CResponse;
 }
 
 export type HeaderVal = string | number | string[];
