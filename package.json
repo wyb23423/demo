@@ -14,10 +14,12 @@
   },
   "dependencies": {
     "@types/mysql": "^2.15.7",
+    "@types/node-xlsx": "^0.12.1",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^14.5.8",
     "mysql": "^2.17.1",
+    "node-xlsx": "^0.15.0",
     "request": "^2.88.0"
   }
 }
