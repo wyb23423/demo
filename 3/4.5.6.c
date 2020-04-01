@@ -32,15 +32,10 @@ int itobReverse(int n, char s[], int b)
 
 int fill2width(char s[], int w, int len)
 {
-    if (w < 0)
-    {
-        return len;
-    }
-
     if (len > w)
     {
         s[w++] = '\0';
-        return w;
+        return len;
     }
 
     while (len < w)
