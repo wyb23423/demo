@@ -1,4 +1,5 @@
 #include "calc.h"
+#include <math.h>
 
 #define MAXOP 100
 
@@ -34,6 +35,18 @@ int main()
             else
             {
                 push(pop() / op2);
+            }
+
+            break;
+        case '%':
+            op2 = pop();
+            if (op2 == 0.0)
+            {
+                printf("error: zero divisor\n");
+            }
+            else
+            {
+                push(fmod(pop(), op2));
             }
 
             break;
