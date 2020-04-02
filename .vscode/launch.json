@@ -7,10 +7,14 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
-            "args": [],
+            "args": [
+                "file1",
+                "file2"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
+            "internalConsoleOptions": "openOnSessionStart",
             "externalConsole": true,
             "MIMode": "gdb",
             "miDebuggerPath": "E:/mingw64//bin/gdb.exe", // 这里修改GDB路径为安装的mingw64的bin下的gdb.exe路径
