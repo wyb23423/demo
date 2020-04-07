@@ -13,5 +13,5 @@
 
 // app.listen(8082);
 
-import run from './xlsx/demo3';
-run();
+import { doGenPasswd } from './password/demo';
+console.log(doGenPasswd('bilibili.com', '13541062430', { symbol: true }));
