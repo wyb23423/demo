@@ -124,7 +124,5 @@ array *array_remove(array *arr, int index, int length)
 void array_dispose(array *arr)
 {
     free(arr->elements);
-
-    arr->size = arr->length = 0;
     free(arr);
 }
