@@ -3,11 +3,6 @@
 #include <stdio.h>
 #include <crtdefs.h>
 
-struct custom_data
-{
-    int value;
-};
-
 void printData(void *data, int index)
 {
     if (data == NULL)
