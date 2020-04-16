@@ -1,6 +1,5 @@
 #include <string.h>
 #include <stdlib.h>
-#include "map.h"
 #include "iterator.h"
 
 #define INIT_SIZE 10
