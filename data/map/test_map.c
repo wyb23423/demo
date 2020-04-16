@@ -40,7 +40,7 @@ int main()
 
     print_map(map);
     map_clear(map);
-    printf("clear\n...");
+    printf("clear...\n");
     print_map(map);
 
     map_dispose(map);
