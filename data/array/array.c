@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-int scale(array *arr, int length)
+static int scale(array *arr, int length)
 {
     if (arr->size > 0)
     {
@@ -124,5 +124,6 @@ array *array_remove(array *arr, int index, int length)
 void array_dispose(array *arr)
 {
     free(arr->elements);
+    arr->elements = NULL;
     free(arr);
 }
