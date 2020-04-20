@@ -35,13 +35,11 @@ int fill2width(char s[], int w, int len)
     if (len > w)
     {
         s[w++] = '\0';
-        return len;
+        return w;
     }
 
     while (len < w)
-    {
         s[len++] = ' ';
-    }
 
     return len;
 }
