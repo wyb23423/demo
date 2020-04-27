@@ -21,12 +21,12 @@
     <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\opengl1.cpp">
+    <ClCompile Include="src\shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\include\opengl1.h">
+    <ClInclude Include="src\include\shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

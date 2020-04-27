@@ -1,5 +1,5 @@
-#include "include/opengl1.h";
-#include <iostream>
+#include "include/shader.h"
+#include "GLFW/glfw3.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -8,24 +8,22 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const char* vertexShaderSource = "#version 460 core\n"
+const std::string vertexShaderSource = "#version 460 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "layout (location = 1) in vec3 aColor;\n"
+    "out vec3 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = vec4(aPos, 1.0);\n"
+    "   ourColor = aColor;"
     "}\0";
-const char* fragmentShader1Source = "#version 330 core\n"
+const std::string fragmentShaderSource = "#version 460 core\n"
     "out vec4 FragColor;\n"
+    "in vec3 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "   FragColor = vec4(ourColor, 1.0);\n"
     "}\n\0";
-const char* fragmentShader2Source = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(0.4f, 1.0f, 0.2f, 0.8f);\n"
-"}\n\0";
 
 
 int main()
@@ -56,19 +54,17 @@ int main()
     }
 
     // =========================================================创建着色器程序
-    GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexShaderSource);
-    GLuint fragmentShader1 = createShader(GL_FRAGMENT_SHADER , fragmentShader1Source);
-    GLuint fragmentShader2 = createShader(GL_FRAGMENT_SHADER, fragmentShader2Source);
-
-    GLuint shaderProgram1 = createProgram(vertexShader, fragmentShader1);
-    GLuint shaderProgram2 = createProgram(vertexShader, fragmentShader2);
+    Shader ourShader;
+    ourShader.setVertexCode(vertexShaderSource);
+    ourShader.setFragmentCode(fragmentShaderSource);
+    ourShader.compile();
 
     // =========================================================输入顶点数据
     float vertices[] = {
-       -0.5f, 0.5f, 0.0f, 
-        0.5f, 0.5f, 0.0f,
-        -0.5f,  -0.5f, 0.0f,
-        0.5f,  -0.5f, 0.0f
+       -0.5f, 0.5f, 0.0f, 0.4f, 0.8f, 1.0f, 
+        0.5f, 0.5f, 0.0f, 0.4f, 1.0f, 0.8f,
+        -0.5f, -0.5f, 0.0f, 0.9f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 0.6f, 0.8f, 1.0f
     };
     GLuint indices[] = {
         0, 2, 3,
@@ -86,8 +82,12 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -98,14 +98,10 @@ int main()
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-           
+
         glBindVertexArray(VAO);
-
-        glUseProgram(shaderProgram1);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-
-        glUseProgram(shaderProgram2);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (const void *)(3 * sizeof(GLuint)));
+        ourShader.use();
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
