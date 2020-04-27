@@ -2,12 +2,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+// 动态编译着色器
+// @param type 着色器类型, 通常是GL_VERTEX_SHADER或GL_FRAGMENT_SHADER
+// @param source
+// @return 创建的着色器ID, 0表示编译失败
+unsigned int createShader(GLenum type, const char* source);
 
 // 创建着色器程序
 // @return 创建的着色器程序ID, 0表示失败
-GLuint createProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
+GLuint createProgram(GLuint vertextShader, GLuint fragmentShader);
 
-// 绑定顶点数据
-// @param VAO 顶点数组对象
-// @param VBO 顶点缓冲对象
-void bindVertices(float vertices[], GLsizeiptr size, GLuint* VAO, GLuint* VBO);

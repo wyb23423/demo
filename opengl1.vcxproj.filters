@@ -21,18 +21,12 @@
     <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\util.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\opengl1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\opengl1.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\include\util.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
