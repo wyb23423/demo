@@ -24,9 +24,24 @@
     <ClCompile Include="src\shader\shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="assets\stb_image.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture\loader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture\texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shader\shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="assets\include\stb_image.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture\texture.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -157,11 +157,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="assets\glad.c" />
+    <ClCompile Include="assets\stb_image.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\shader\shader.cpp" />
+    <ClCompile Include="src\texture\loader.cpp" />
+    <ClCompile Include="src\texture\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assets\include\stb_image.h" />
     <ClInclude Include="src\shader\shader.h" />
+    <ClInclude Include="src\texture\texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
