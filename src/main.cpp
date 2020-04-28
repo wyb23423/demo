@@ -1,4 +1,4 @@
-#include "include/shader.h"
+#include "shader/shader.h"
 #include "GLFW/glfw3.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -7,24 +7,6 @@ void processInput(GLFWwindow* window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-const std::string vertexShaderSource = "#version 460 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec3 aColor;\n"
-    "out vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-    "   ourColor = aColor;"
-    "}\0";
-const std::string fragmentShaderSource = "#version 460 core\n"
-    "out vec4 FragColor;\n"
-    "in vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(ourColor, 1.0);\n"
-    "}\n\0";
-
 
 int main()
 {
@@ -55,8 +37,8 @@ int main()
 
     // =========================================================创建着色器程序
     Shader ourShader;
-    ourShader.setVertexCode(vertexShaderSource);
-    ourShader.setFragmentCode(fragmentShaderSource);
+    ourShader.setVertexCode("src/shader/vertex/shader1.vs");
+    ourShader.setFragmentCode("src/shader/fragment/shader1.fs");
     ourShader.compile();
 
     // =========================================================输入顶点数据

@@ -1,4 +1,4 @@
-#include "include/shader.h"
+#include "shader.h"
 
 std::string Shader::getVertexCode() {
     return vertexCode;

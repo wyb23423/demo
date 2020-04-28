@@ -158,10 +158,10 @@
   <ItemGroup>
     <ClCompile Include="assets\glad.c" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\shader.cpp" />
+    <ClCompile Include="src\shader\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\include\shader.h" />
+    <ClInclude Include="src\shader\shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
