@@ -77,8 +77,8 @@ int main()
     glBindVertexArray(0);
 
     // ===========================================================
-    Texture texture;
-    texture.setFilename("src/texture/Wallpapers/Wallpaper 04.jpg");
+    Texture texture("src/texture/Wallpapers/Wallpaper 04.jpg");
+    // texture.setFilename("src/texture/Wallpapers/Wallpaper 04.jpg");
     texture.minFilter = texture.magFilter = GL_LINEAR;
     texture.use();
     
@@ -89,7 +89,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        texture.bind();
+        // texture.bind();
         glBindVertexArray(VAO);
         ourShader.use();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

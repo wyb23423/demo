@@ -7,7 +7,6 @@ void Texture::setFilename(const char* filename) {
 
 Texture::Texture() {
 	glGenTextures(1, &ID);
-	glBindTexture(TARGET, ID);
 }
 Texture::Texture(const char* filename) {
 	Texture();
@@ -45,6 +44,8 @@ ImageData* Texture::_use() {
 	if (!imageData) {
 		return NULL;
 	}
+
+	bind();
 
 	glTexParameteri(TARGET, GL_TEXTURE_WRAP_S, wraps);
 	glTexParameteri(TARGET, GL_TEXTURE_WRAP_T, wrapt);
