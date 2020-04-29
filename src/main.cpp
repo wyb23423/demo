@@ -2,6 +2,7 @@
 #include "texture/texture.h"
 
 #include "GLFW/glfw3.h"
+#include <stb_image.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -45,10 +46,10 @@ int main()
 
     // =========================================================输入顶点数据
     float vertices[] = {
-       -0.8f, 0.56f, 0.0f, 0.4f, 0.8f, 1.0f, 0.0f, 0.0f,
-        0.8f, 0.56f, 0.0f, 0.4f, 1.0f, 0.8f, 1.0f, 0.0f,
-        -0.8f, -0.56f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, 1.0f,
-        0.8f, -0.56f, 0.0f, 0.6f, 0.8f, 1.0f, 1.0f, 1.0f
+       -0.8f, 0.56f, 0.0f, 0.4f, 0.8f, 1.0f, 0.0f, 1.0f,
+        0.8f, 0.56f, 0.0f, 0.4f, 1.0f, 0.8f, 1.0f, 1.0f,
+        -0.8f, -0.56f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.8f, -0.56f, 0.0f, 0.6f, 0.8f, 1.0f, 1.0f, 0.0f
     };
     GLuint indices[] = {
         0, 2, 3,
@@ -76,11 +77,18 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    // ===========================================================
-    Texture texture("src/texture/Wallpapers/Wallpaper 04.jpg");
-    // texture.setFilename("src/texture/Wallpapers/Wallpaper 04.jpg");
-    texture.minFilter = texture.magFilter = GL_LINEAR;
-    texture.use();
+    // ===========================================================load and create a texture 
+    Texture texture1("src/texture/Wallpapers/Wallpaper 03.jpg");
+    texture1.minFilter = texture1.magFilter = GL_LINEAR;
+    texture1.use(GL_RGB);
+
+    Texture texture2("src/texture/Wallpapers/Wallpaper 04.jpg");
+    texture2.minFilter = texture2.magFilter = GL_LINEAR;
+    texture2.use(GL_RGB);
+
+    ourShader.use();
+    ourShader.setUniform("texture1", 0);
+    ourShader.setUniform("texture2", 1);
     
     while (!glfwWindowShouldClose(window))
     {
@@ -89,7 +97,12 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // texture.bind();
+        // bind textures on corresponding texture units
+        Texture::active(0);;
+        texture1.bind();
+        Texture::active(1);;
+        texture2.bind();
+
         glBindVertexArray(VAO);
         ourShader.use();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

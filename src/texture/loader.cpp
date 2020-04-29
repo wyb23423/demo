@@ -17,6 +17,7 @@ ImageData* loadImage(const char* filename) {
 		clearImageCahe();
 	}
 
+	stbi_set_flip_vertically_on_load(true);
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
 
@@ -28,7 +29,7 @@ ImageData* loadImage(const char* filename) {
 		imageData->data = data;
 		imageData->count = 0;
 
-		return imageData;
+		return TEXTDATA_CACHE[filename] = imageData;
 	}
 	else {
 		cout << "Failed to load image: " << filename << endl;

@@ -27,6 +27,15 @@ void clearImageCahe();
 
 class Texture {
 public:
+	// 激活纹理单元
+	static void active(unsigned int unit) {
+		if (unit >= GL_TEXTURE0 && unit <= GL_TEXTURE31) {
+			glActiveTexture(unit);
+		} else if (unit >= 0 && unit <= 31) {
+			glActiveTexture(GL_TEXTURE0 + unit);
+		}
+	}
+
 	// 纹理环绕方式
 	int wraps = GL_REPEAT;
 	int wrapt = GL_REPEAT;
@@ -42,8 +51,10 @@ public:
 	Texture(const char* filename);
 
 	// 加载并使用纹理配置
-	bool use(); // 自动生成所有需要的多级渐远纹理
-	bool use(int level); // 手动设置多级渐远纹理的级别
+	// format 数据类型如： GL_RGB/GL_RGBA
+	bool use(unsigned int format); // 自动生成所有需要的多级渐远纹理
+	bool use(unsigned int format, int level); // 手动设置多级渐远纹理的级别
+
 	// 绑定纹理
 	void bind();
 

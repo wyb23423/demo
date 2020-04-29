@@ -27,9 +27,9 @@ public:
     // 使用/激活程序
     void use();
     // uniform工具函数
-    void setUniform(const std::string &name, bool value) const;
-    void setUniform(const std::string &name, int value) const;
-    void setUniform(const std::string &name, float value) const;
+    void setUniform(const std::string &name, bool value);
+    void setUniform(const std::string &name, int value);
+    void setUniform(const std::string &name, float value);
 
 private:
     // 程序ID

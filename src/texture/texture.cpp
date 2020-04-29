@@ -9,14 +9,14 @@ Texture::Texture() {
 	glGenTextures(1, &ID);
 }
 Texture::Texture(const char* filename) {
-	Texture();
+	glGenTextures(1, &ID);
 	setFilename(filename);
 }
 
-bool Texture::use() {
+bool Texture::use(unsigned int format) {
 	ImageData* imageData = _use();
 	if (imageData) {
-		glTexImage2D(TARGET, 0, GL_RGB, imageData->width, imageData->height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData->data);
+		glTexImage2D(TARGET, 0, format, imageData->width, imageData->height, 0, format, GL_UNSIGNED_BYTE, imageData->data);
 		glGenerateMipmap(TARGET);
 
 		return true;
@@ -25,10 +25,10 @@ bool Texture::use() {
 	return false;
 }
 
-bool Texture::use(int level) {
+bool Texture::use(unsigned int format, int level) {
 	ImageData* imageData = _use();
 	if (imageData) {
-		glTexImage2D(TARGET, level, GL_RGB, imageData->width, imageData->height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData->data);
+		glTexImage2D(TARGET, level, format, imageData->width, imageData->height, 0, format, GL_UNSIGNED_BYTE, imageData->data);
 		return true;
 	}
 
