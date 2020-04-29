@@ -84,6 +84,7 @@ int main()
 
     Texture texture2("src/texture/Wallpapers/Wallpaper 04.jpg");
     texture2.minFilter = texture2.magFilter = GL_LINEAR;
+    texture2.unit = 1;
     texture2.use(GL_RGB);
 
     ourShader.use();
@@ -96,12 +97,6 @@ int main()
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        // bind textures on corresponding texture units
-        Texture::active(0);;
-        texture1.bind();
-        Texture::active(1);;
-        texture2.bind();
 
         glBindVertexArray(VAO);
         ourShader.use();

@@ -36,6 +36,7 @@ bool Texture::use(unsigned int format, int level) {
 }
 
 void Texture::bind() {
+	Texture::active(unit);
 	glBindTexture(TARGET, ID);
 }
 

@@ -36,6 +36,9 @@ public:
 		}
 	}
 
+	// 纹理单元
+	unsigned int unit = 0;
+
 	// 纹理环绕方式
 	int wraps = GL_REPEAT;
 	int wrapt = GL_REPEAT;
