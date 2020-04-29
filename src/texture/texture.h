@@ -11,6 +11,7 @@ using namespace std;
 // =====================================loader
 typedef struct _ImageData
 {
+	int count; // 使用次数
 	int width;
 	int height;
 	int nrChannels;

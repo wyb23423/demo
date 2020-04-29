@@ -3,7 +3,7 @@
 #include <map>
 #include <iostream>
 
-static constexpr int CACHE_MAX_SIZE = 5000;
+static constexpr int CACHE_MAX_SIZE = 5000; // 最大缓存数
 
 static map<const char*, ImageData*> TEXTDATA_CACHE;
 
@@ -26,6 +26,7 @@ ImageData* loadImage(const char* filename) {
 		imageData->height = height;
 		imageData->nrChannels = nrChannels;
 		imageData->data = data;
+		imageData->count = 0;
 
 		return imageData;
 	}
@@ -43,10 +44,14 @@ bool deleteImageCache(const char* filename) {
 	}
 
 	ImageData* imageData = TEXTDATA_CACHE.at(filename);
-	stbi_image_free(imageData->data);
-	free(imageData);
+	imageData->count--; // 使用计数减1
 
-	TEXTDATA_CACHE.erase(filename);
+	if (imageData->count <= 0) { // 不再使用, 清除内存
+		stbi_image_free(imageData->data);
+		free(imageData);
+
+		TEXTDATA_CACHE.erase(filename);
+	}
 
 	return true;
 }

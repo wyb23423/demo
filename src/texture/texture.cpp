@@ -55,5 +55,6 @@ ImageData* Texture::_use() {
 		glTexParameterfv(TARGET, GL_TEXTURE_BORDER_COLOR, borderColor);
 	}
 
+	imageData->count++; // 增加使用计数
 	return imageData;
 }
