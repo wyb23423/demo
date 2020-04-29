@@ -1,4 +1,6 @@
 #include "shader/shader.h"
+#include "texture/texture.h"
+
 #include "GLFW/glfw3.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -43,10 +45,10 @@ int main()
 
     // =========================================================输入顶点数据
     float vertices[] = {
-       -0.5f, 0.5f, 0.0f, 0.4f, 0.8f, 1.0f, 
-        0.5f, 0.5f, 0.0f, 0.4f, 1.0f, 0.8f,
-        -0.5f, -0.5f, 0.0f, 0.9f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 0.6f, 0.8f, 1.0f
+       -0.8f, 0.56f, 0.0f, 0.4f, 0.8f, 1.0f, 0.0f, 0.0f,
+        0.8f, 0.56f, 0.0f, 0.4f, 1.0f, 0.8f, 1.0f, 0.0f,
+        -0.8f, -0.56f, 0.0f, 0.9f, 0.0f, 0.0f, 0.0f, 1.0f,
+        0.8f, -0.56f, 0.0f, 0.6f, 0.8f, 1.0f, 1.0f, 1.0f
     };
     GLuint indices[] = {
         0, 2, 3,
@@ -64,15 +66,21 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    // ===========================================================
+    Texture texture;
+    texture.setFilename("src/texture/Wallpapers/Wallpaper 04.jpg");
+    texture.minFilter = texture.magFilter = GL_LINEAR;
+    texture.use();
     
     while (!glfwWindowShouldClose(window))
     {
@@ -81,6 +89,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        texture.bind();
         glBindVertexArray(VAO);
         ourShader.use();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

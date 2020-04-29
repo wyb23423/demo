@@ -1,6 +1,7 @@
-#include "stb_image.h";
-#include "texture.h";
+#include "stb_image.h"
+#include "texture.h"
 #include <map>
+#include <iostream>
 
 static constexpr int CACHE_MAX_SIZE = 5000;
 
@@ -12,16 +13,28 @@ ImageData* loadImage(const char* filename) {
 	}
 
 	// 超过设置的最大缓存量, 先清空数据
-	if (TEXTDATA_CACHE.size >= CACHE_MAX_SIZE) {
+	if (TEXTDATA_CACHE.size() >= CACHE_MAX_SIZE) {
 		clearImageCahe();
 	}
 
-	ImageData* imageData = (ImageData*)malloc(sizeof(ImageData));
-	imageData->data = stbi_load(filename, &imageData->width, &imageData->height, &imageData->nrChannels, 0);
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
 
-	TEXTDATA_CACHE[filename] = imageData;
+	if (data) {
+		ImageData* imageData = (ImageData*)malloc(sizeof(ImageData));
+		imageData->width = width;
+		imageData->height = height;
+		imageData->nrChannels = nrChannels;
+		imageData->data = data;
 
-	return imageData;
+		return imageData;
+	}
+	else {
+		cout << "Failed to load image: " << filename << endl;
+	}
+	
+
+	return NULL;
 }
 
 bool deleteImageCache(const char* filename) {
@@ -39,7 +52,7 @@ bool deleteImageCache(const char* filename) {
 }
 
 void clearImageCahe() {
-	if (TEXTDATA_CACHE.size < 1) {
+	if (TEXTDATA_CACHE.size() < 1) {
 		return;
 	}
 
