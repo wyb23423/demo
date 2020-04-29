@@ -1,13 +1,14 @@
 #include "texture.h";
 
 void Texture::setFilename(const char* filename) {
+	if (filename == src) {
+		return;
+	}
+
 	deleteImageCache(src.c_str());
 	src = filename;
 }
 
-Texture::Texture() {
-	glGenTextures(1, &ID);
-}
 Texture::Texture(const char* filename) {
 	glGenTextures(1, &ID);
 	setFilename(filename);

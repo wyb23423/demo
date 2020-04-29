@@ -50,8 +50,7 @@ public:
 
 	void setFilename(const char* filename);
 
-	Texture();
-	Texture(const char* filename);
+	Texture(const char* filename = "");
 
 	// 加载并使用纹理配置
 	// format 数据类型如： GL_RGB/GL_RGBA
