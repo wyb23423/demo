@@ -1,5 +1,3 @@
-// npm install -g commitizen
-
 module.exports = {
     "list": [
         "test",
