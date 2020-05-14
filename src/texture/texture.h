@@ -4,7 +4,7 @@
 #define TEXTURE_H
 
 #include <string>
-#include <glad\glad.h>
+#include <glad/glad.h>
 
 using namespace std;
 

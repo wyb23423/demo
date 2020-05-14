@@ -4,6 +4,7 @@
 #define SHADER_H
 
 #include <glad/glad.h> // 包含glad来获取所有的必须OpenGL头文件
+#include <glm/mat4x4.hpp>
 
 #include <string>
 #include <fstream>
@@ -30,6 +31,7 @@ public:
     void setUniform(const std::string &name, bool value);
     void setUniform(const std::string &name, int value);
     void setUniform(const std::string &name, float value);
+    void setUniform(const std::string& name, glm::mat4& transform);
 
 private:
     // 程序ID

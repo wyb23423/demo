@@ -1,0 +1,27 @@
+{
+    "name": "commit-msg",
+    "version": "0.0.1",
+    "description": "",
+    "scripts": {
+        "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@commitlint/config-conventional": "^8.3.4",
+        "commitlint": "^8.3.5",
+        "conventional-changelog-cli": "^2.0.31",
+        "git-cz": "^4.3.1",
+        "husky": "^4.2.5"
+    },
+    "husky": {
+        "hooks": {
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
+    },
+    "config": {
+        "commitizen": {
+            "path": "git-cz"
+        }
+    }
+}

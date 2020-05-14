@@ -1,4 +1,5 @@
 #include "shader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 std::string Shader::getVertexCode() {
     return vertexCode;
@@ -63,6 +64,9 @@ void Shader::setUniform(const std::string &name, int value) {
 }
 void Shader::setUniform(const std::string &name, float value) {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shader::setUniform(const std::string& name, glm::mat4& transform) {
+    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(transform));
 }
 
 GLuint Shader::compileShader(GLenum type, const char* source) {

@@ -1,7 +1,7 @@
 #include "shader/shader.h"
 #include "texture/texture.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <stb_image.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
