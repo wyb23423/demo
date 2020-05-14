@@ -16,7 +16,8 @@ module.exports = {
     "questions": [
         "type",
         "scope",
-        "subject"
+        "subject",
+        "lerna"
     ],
     "types": {
         "chore": {
