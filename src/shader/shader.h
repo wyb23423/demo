@@ -16,22 +16,22 @@ enum SHARDER_TYPE { VERTEX, FRAGMENT };
 class Shader {
 public:
     std::string getVertexCode();
-    void setVertexCode(const GLchar* path);
-    void setVertexCode(const std::string &source);
+    Shader* const setVertexCode(const GLchar* path);
+    Shader* const setVertexCode(const std::string &source);
 
     std::string getFragmentCode();
-    void setFragmentCode(const GLchar* path);
-    void setFragmentCode(const std::string &source);
+    Shader* const setFragmentCode(const GLchar* path);
+    Shader* const setFragmentCode(const std::string &source);
 
     // 构建着色器
     bool compile();
     // 使用/激活程序
-    void use();
+    Shader* const use();
     // uniform工具函数
-    void setUniform(const std::string &name, bool value);
-    void setUniform(const std::string &name, int value);
-    void setUniform(const std::string &name, float value);
-    void setUniform(const std::string& name, glm::mat4& transform);
+    Shader* const setUniform(const std::string &name, bool value);
+    Shader* const setUniform(const std::string &name, int value);
+    Shader* const setUniform(const std::string &name, float value);
+    Shader* const setUniform(const std::string& name, glm::mat4& transform);
 
 private:
     // 程序ID

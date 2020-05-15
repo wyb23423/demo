@@ -3,6 +3,7 @@
 
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -39,10 +40,13 @@ int main()
     }
 
     // =========================================================创建着色器程序
-    Shader ourShader;
-    ourShader.setVertexCode("src/shader/vertex/shader1.vs");
-    ourShader.setFragmentCode("src/shader/fragment/shader1.fs");
-    ourShader.compile();
+    Shader* ourShader = new Shader();
+    if (ourShader == NULL) {
+        std::cout << "Failed to initialize Shader" << std::endl;
+        return -1;
+    }
+
+    ourShader->setVertexCode("src/shader/vertex/shader1.vs")->setFragmentCode("src/shader/fragment/shader1.fs")->compile();
 
     // =========================================================输入顶点数据
     float vertices[] = {
@@ -87,10 +91,15 @@ int main()
     texture2.unit = 1;
     texture2.use(GL_RGB);
 
-    ourShader.use();
-    ourShader.setUniform("texture1", 0);
-    ourShader.setUniform("texture2", 1);
+    ourShader->use()->setUniform("texture1", 0)->setUniform("texture2", 1);
     
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    glm::mat4 projection = glm::mat4(1.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
@@ -99,7 +108,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBindVertexArray(VAO);
-        ourShader.use();
+        ourShader->use()->setUniform("model", model)->setUniform("view", view)->setUniform("projection", projection);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
@@ -109,7 +118,9 @@ int main()
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &IBO);
-
+    
+    delete ourShader;
+    ourShader = NULL;
     glfwTerminate();
 
     return 0;

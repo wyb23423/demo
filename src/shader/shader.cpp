@@ -4,21 +4,25 @@
 std::string Shader::getVertexCode() {
     return vertexCode;
 }
-void Shader::setVertexCode(const GLchar* path) {
+Shader* const Shader::setVertexCode(const GLchar* path) {
     loadCode(path, VERTEX);
+    return this;
 }
-void Shader::setVertexCode(const std::string &source) {
+Shader* const Shader::setVertexCode(const std::string &source) {
     vertexCode = source;
+    return this;
 }
 
 std::string Shader::getFragmentCode() {
     return fragmentCode;
 }
-void Shader::setFragmentCode(const GLchar* path) {
+Shader* const Shader::setFragmentCode(const GLchar* path) {
     loadCode(path, FRAGMENT);
+    return this;
 }
-void Shader::setFragmentCode(const std::string &source) {
+Shader* const Shader::setFragmentCode(const std::string &source) {
     fragmentCode = source;
+    return this;
 }
 
 bool Shader::compile() {
@@ -52,21 +56,26 @@ bool Shader::compile() {
 }
 
 // 使用/激活程序
-void Shader::use() {
+Shader* const Shader::use() {
     glUseProgram(ID);
+    return this;
 }
 // uniform工具函数
-void Shader::setUniform(const std::string &name, bool value) {
+Shader* const Shader::setUniform(const std::string &name, bool value) {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+    return this;
 }
-void Shader::setUniform(const std::string &name, int value) {
+Shader* const Shader::setUniform(const std::string &name, int value) {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    return this;
 }
-void Shader::setUniform(const std::string &name, float value) {
+Shader* const Shader::setUniform(const std::string &name, float value) {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    return this;
 }
-void Shader::setUniform(const std::string& name, glm::mat4& transform) {
+Shader* const Shader::setUniform(const std::string& name, glm::mat4& transform) {
     glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(transform));
+    return this;
 }
 
 GLuint Shader::compileShader(GLenum type, const char* source) {
