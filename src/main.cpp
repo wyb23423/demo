@@ -29,10 +29,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
@@ -61,15 +57,17 @@ int main()
 
     // =========================================================创建着色器程序
     Shader* shader = new Shader();
-    if (shader == NULL) {
+    Shader* lightShader = new Shader();
+    if (shader == NULL || lightShader == NULL) {
         std::cout << "Failed to initialize Shader" << std::endl;
         return -1;
     }
     shader->setVertexCode("src/shader/vertex/shader1.vs")->setFragmentCode("src/shader/fragment/shader1.fs")->compile();
+    lightShader->setVertexCode("src/shader/vertex/light.vs")->setFragmentCode("src/shader/fragment/light.fs")->compile();
 
     // =========================================================输入顶点数据
     float vertices[] = {
-               -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -109,45 +107,40 @@ int main()
          0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
          0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
     };
     GLuint VAO, VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+    glBindVertexArray(VAO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
+
+
+    GLuint lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     // ===========================================================load and create a texture 
-    Texture texture1("src/texture/Wallpapers/Wallpaper 03.jpg");
-    texture1.minFilter = texture1.magFilter = GL_LINEAR;
-    texture1.use(GL_RGB);
+    //Texture texture1("src/texture/Wallpapers/Wallpaper 03.jpg");
+    //texture1.minFilter = texture1.magFilter = GL_LINEAR;
+    //texture1.use(GL_RGB);
 
-    Texture texture2("src/texture/Wallpapers/Wallpaper 04.jpg");
-    texture2.minFilter = texture2.magFilter = GL_LINEAR;
-    texture2.unit = 1;
-    texture2.use(GL_RGB);
+    //Texture texture2("src/texture/Wallpapers/Wallpaper 04.jpg");
+    //texture2.minFilter = texture2.magFilter = GL_LINEAR;
+    //texture2.unit = 1;
+    //texture2.use(GL_RGB);
 
-    shader->use()->setUniform("texture1", 0)->setUniform("texture2", 1);
+    // shader->use()->setUniform("texture1", 0)->setUniform("texture2", 1);
 
-    glm::vec3 cubePositions[] = {
-        glm::vec3(0.0f,  0.0f,  0.0f),
-        glm::vec3(2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f,  2.0f, -2.5f),
-        glm::vec3(1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
+    glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -156,21 +149,27 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBindVertexArray(VAO);
-
         glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.getViewMatrix();
-        shader->use()->setUniform("view", view)->setUniform("projection", projection);
-        for (unsigned int i = 0; i < 10; i++)
-        {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
-            shader->setUniform("model", model);
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+        // render the cube
+        glm::mat4 model = glm::mat4(1.0f);
+        shader
+            ->use()
+            ->setUniform("objColor", 1.0f, 0.5f, 0.31f)
+            ->setUniform("lightColor", 1.0f, 1.0f, 1.0f)
+            ->setUniform("view", view)
+            ->setUniform("projection", projection)
+            ->setUniform("model", model);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        // also draw the lamp object
+        glm::mat4 lightModel = glm::mat4(1.0f);
+        lightModel = glm::translate(lightModel, lightPos);
+        lightModel = glm::scale(lightModel, glm::vec3(0.2f)); // a smaller cube
+        lightShader->use()->setUniform("view", view)->setUniform("projection", projection)->setUniform("model", lightModel);
+        glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
@@ -178,10 +177,13 @@ int main()
     }
 
     glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
     
     delete shader;
     shader = NULL;
+    delete lightShader;
+    lightShader = NULL;
     glfwTerminate();
 
     return 0;

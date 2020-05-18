@@ -31,6 +31,8 @@ public:
     Shader* const setUniform(const std::string &name, bool value);
     Shader* const setUniform(const std::string &name, int value);
     Shader* const setUniform(const std::string &name, float value);
+    Shader* const setUniform(const std::string& name, float x, float y);
+    Shader* const setUniform(const std::string& name, float x, float y, float z);
     Shader* const setUniform(const std::string& name, glm::mat4& transform);
 
 private:
