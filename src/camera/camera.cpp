@@ -36,10 +36,10 @@ void Camera::processMouseScroll(float yoffset, float minZoom, float maxZoom) {
         maxZoom = temp;
     }
 
-    if (zoom >= minZoom && zoom <= maxZoom) zoom -= yoffset;
+    zoom -= yoffset;
 
-    if (zoom <= minZoom) zoom = minZoom;
-    else if (zoom >= maxZoom) zoom = maxZoom;
+    if (zoom < minZoom) zoom = minZoom;
+    else if (zoom > maxZoom) zoom = maxZoom;
 }
 
 void Camera::updateCameraVectors() {
