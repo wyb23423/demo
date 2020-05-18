@@ -1,5 +1,6 @@
 #include "shader/shader.h"
 #include "texture/texture.h"
+#include "camera/camera.h"
 
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
@@ -7,10 +8,19 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+// camera
+Camera camera;
+
+float lastX = 0;
+float lastY = 0;
+bool firstMouse = true;
 
 int main()
 {
@@ -33,6 +43,13 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    camera.position.z = 3.0f;
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -43,13 +60,12 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     // =========================================================创建着色器程序
-    Shader* ourShader = new Shader();
-    if (ourShader == NULL) {
+    Shader* shader = new Shader();
+    if (shader == NULL) {
         std::cout << "Failed to initialize Shader" << std::endl;
         return -1;
     }
-
-    ourShader->setVertexCode("src/shader/vertex/shader1.vs")->setFragmentCode("src/shader/fragment/shader1.fs")->compile();
+    shader->setVertexCode("src/shader/vertex/shader1.vs")->setFragmentCode("src/shader/fragment/shader1.fs")->compile();
 
     // =========================================================输入顶点数据
     float vertices[] = {
@@ -118,13 +134,7 @@ int main()
     texture2.unit = 1;
     texture2.use(GL_RGB);
 
-    ourShader->use()->setUniform("texture1", 0)->setUniform("texture2", 1);
-    
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
+    shader->use()->setUniform("texture1", 0)->setUniform("texture2", 1);
 
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f,  0.0f,  0.0f),
@@ -148,13 +158,15 @@ int main()
 
         glBindVertexArray(VAO);
 
-        ourShader->use()->setUniform("view", view)->setUniform("projection", projection);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera.getViewMatrix();
+        shader->use()->setUniform("view", view)->setUniform("projection", projection);
         for (unsigned int i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
-            ourShader->setUniform("model", model);
+            shader->setUniform("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
@@ -168,8 +180,8 @@ int main()
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     
-    delete ourShader;
-    ourShader = NULL;
+    delete shader;
+    shader = NULL;
     glfwTerminate();
 
     return 0;
@@ -184,4 +196,31 @@ void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+}
+
+// glfw: whenever the mouse moves, this callback is called
+// -------------------------------------------------------
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.processMouseMovement(xoffset, yoffset);
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.processMouseScroll(yoffset, 1.0f, 90.0f);
 }
