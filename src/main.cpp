@@ -155,10 +155,8 @@ int main()
         // render the cube
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat3 normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
-        glm::inverse(model);
         shader
             ->use()
-            ->setUniform("viewPos", camera.position)
             ->setUniform("normalModel", normalModel)
             ->setUniform("lightPos", lightPos)
             ->setUniform("objColor", 1.0f, 0.5f, 0.31f)
