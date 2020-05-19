@@ -154,7 +154,7 @@ int main()
 
         // render the cube
         glm::mat4 model = glm::mat4(1.0f);
-        glm::mat3 normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
+        glm::mat3 normalModel = glm::mat3(glm::transpose(glm::inverse(view * model)));
         shader
             ->use()
             ->setUniform("normalModel", normalModel)
