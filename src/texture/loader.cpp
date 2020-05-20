@@ -19,15 +19,32 @@ ImageData* loadImage(const char* filename) {
 
 	stbi_set_flip_vertically_on_load(true);
 	int width, height, nrChannels;
-	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, STBI_default);
 
 	if (data) {
 		ImageData* imageData = (ImageData*)malloc(sizeof(ImageData));
 		imageData->width = width;
 		imageData->height = height;
-		imageData->nrChannels = nrChannels;
 		imageData->data = data;
 		imageData->count = 0;
+
+		
+		switch (nrChannels) {
+		case STBI_grey:
+		case STBI_grey_alpha:
+			imageData->format = GL_RED;
+			break;
+		case STBI_rgb:
+			imageData->format = GL_RGB;
+			break;
+		case STBI_rgb_alpha:
+			imageData->format = GL_RGBA;
+			break;
+		default:
+			imageData->format = GL_RGB;
+			break;
+		}
+
 
 		return TEXTDATA_CACHE[filename] = imageData;
 	}

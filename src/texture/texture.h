@@ -14,7 +14,7 @@ typedef struct _ImageData
 	int count; // 使用次数
 	int width;
 	int height;
-	int nrChannels;
+	unsigned int format;
 	unsigned char* data;
 } ImageData;
 
@@ -48,17 +48,18 @@ public:
 	int minFilter = GL_NEAREST;
 	int magFilter = GL_NEAREST;
 
-	void setFilename(const char* filename);
+	Texture* setFilename(const char* filename);
 
 	Texture(const char* filename = "");
 
 	// 加载并使用纹理配置
-	// format 数据类型如： GL_RGB/GL_RGBA
-	bool use(unsigned int format); // 自动生成所有需要的多级渐远纹理
-	bool use(unsigned int format, int level); // 手动设置多级渐远纹理的级别
+	bool use(); // 自动设置多级渐远纹理的级别
+	bool use(int level); //  手动设置多级渐远纹理的级别
 
 	// 绑定纹理
 	void bind();
+	// 克隆当前纹理
+	Texture* clone();
 
 protected:
 	// 纹理目标

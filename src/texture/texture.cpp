@@ -1,12 +1,14 @@
 #include "texture.h";
 
-void Texture::setFilename(const char* filename) {
+Texture* Texture::setFilename(const char* filename) {
 	if (filename == src) {
-		return;
+		return this;
 	}
 
 	deleteImageCache(src.c_str());
 	src = filename;
+
+	return this;
 }
 
 Texture::Texture(const char* filename) {
@@ -14,10 +16,13 @@ Texture::Texture(const char* filename) {
 	setFilename(filename);
 }
 
-bool Texture::use(unsigned int format) {
+bool Texture::use() {
 	ImageData* imageData = _use();
 	if (imageData) {
-		glTexImage2D(TARGET, 0, format, imageData->width, imageData->height, 0, format, GL_UNSIGNED_BYTE, imageData->data);
+		glTexImage2D(
+			TARGET, 0, imageData->format, imageData->width, imageData->height, 
+			0, imageData->format, GL_UNSIGNED_BYTE, imageData->data
+		);
 		glGenerateMipmap(TARGET);
 
 		return true;
@@ -26,10 +31,13 @@ bool Texture::use(unsigned int format) {
 	return false;
 }
 
-bool Texture::use(unsigned int format, int level) {
+bool Texture::use(int level) {
 	ImageData* imageData = _use();
 	if (imageData) {
-		glTexImage2D(TARGET, level, format, imageData->width, imageData->height, 0, format, GL_UNSIGNED_BYTE, imageData->data);
+		glTexImage2D(
+			TARGET, level, imageData->format, imageData->width, imageData->height, 
+			0, imageData->format, GL_UNSIGNED_BYTE, imageData->data
+		);
 		return true;
 	}
 
@@ -39,6 +47,18 @@ bool Texture::use(unsigned int format, int level) {
 void Texture::bind() {
 	Texture::active(unit);
 	glBindTexture(TARGET, ID);
+}
+
+Texture* Texture::clone() {
+	Texture* texture = new Texture(src.c_str());
+	texture->wraps = wraps;
+	texture->wrapt = wrapt;
+	texture->minFilter = minFilter;
+	texture->magFilter = magFilter;
+	texture->unit = unit;
+	memcpy(&texture->borderColor, &borderColor, sizeof(float) * 4);
+
+	return texture;
 }
 
 ImageData* Texture::_use() {
