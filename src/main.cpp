@@ -39,7 +39,7 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    camera.position = glm::vec3(-1.1f, -1.2f, 3.0f);
+    camera.position = glm::vec3(0.0f, 0.0f, 3.0f);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
@@ -57,13 +57,11 @@ int main()
 
     // =========================================================创建着色器程序
     Shader* shader = new Shader();
-    Shader* lightShader = new Shader();
-    if (shader == NULL || lightShader == NULL) {
+    if (shader == NULL) {
         std::cout << "Failed to initialize Shader" << std::endl;
         return -1;
     }
     shader->setVertexCode("src/shader/vertex/shader1.vs")->setFragmentCode("src/shader/fragment/shader1.fs")->compile();
-    lightShader->setVertexCode("src/shader/vertex/light.vs")->setFragmentCode("src/shader/fragment/light.fs")->compile();
 
     // =========================================================输入顶点数据
     float vertices[] = {
@@ -123,14 +121,6 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-
-    GLuint lightVAO;
-    glGenVertexArrays(1, &lightVAO);
-    glBindVertexArray(lightVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
     // ===========================================================load and create a texture 
     Texture* texture1 = new Texture("src/texture/Wallpapers/container2.png");
     texture1->minFilter = GL_LINEAR_MIPMAP_LINEAR;
@@ -141,7 +131,30 @@ int main()
     texture2->unit = 1;
     texture2->use();
 
+    shader->use()->setUniform("material.diffuse", 0)->setUniform("material.specular", 1);
+
     glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
+    // positions of the point lights
+    glm::vec3 pointLightPositions[] = {
+        glm::vec3(0.7f,  0.2f,  2.0f),
+        glm::vec3(2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f,  2.0f, -12.0f),
+        glm::vec3(0.0f,  0.0f, -3.0f)
+    };
+    // positions all containers
+    glm::vec3 cubePositions[] = {
+        glm::vec3(0.0f,  0.0f,  0.0f),
+        glm::vec3(2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f,  2.0f, -2.5f),
+        glm::vec3(1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
 
     while (!glfwWindowShouldClose(window))
     {
@@ -155,44 +168,87 @@ int main()
 
         // render the cube
         glm::mat4 model = glm::mat4(1.0f);
-        glm::mat3 normalModel = glm::mat3(glm::transpose(glm::inverse(view * model)));
+        glm::mat3 normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
 
         shader
             ->use()
+            ->setUniform("viewPos", camera.position)
             ->setUniform("normalModel", normalModel)
-            ->setUniform("lightPos", lightPos)
-            ->setUniform("material.diffuse", 0)
-            ->setUniform("material.specular", 1)
             ->setUniform("material.shininess", 32.0f)
-            ->setUniform("light.ambient", 0.2f, 0.2f, 0.2f)
-            ->setUniform("light.diffuse", 0.5f, 0.5f, 0.5f)
-            ->setUniform("light.specular", 1.0f, 1.0f, 1.0f)
+            // directional light
+            ->setUniform("dirLights[0].direction", -0.2f, -1.0f, -0.3f)
+            ->setUniform("dirLights[0].ambient", 0.05f, 0.05f, 0.05f)
+            ->setUniform("dirLights[0].diffuse", 0.4f, 0.4f, 0.4f)
+            ->setUniform("dirLights[0].specular", 0.5f, 0.5f, 0.5f)
+            // point light 1
+            ->setUniform("pointLights[0].position", pointLightPositions[0])
+            ->setUniform("pointLights[0].ambient", 0.05f, 0.05f, 0.05f)
+            ->setUniform("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f)
+            ->setUniform("pointLights[0].specular", 1.0f, 1.0f, 1.0f)
+            ->setUniform("pointLights[0].constant", 1.0f)
+            ->setUniform("pointLights[0].linear", 0.09f)
+            ->setUniform("pointLights[0].quadratic", 0.032f)
+            // point light 2
+            ->setUniform("pointLights[1].position", pointLightPositions[1])
+            ->setUniform("pointLights[1].ambient", 0.05f, 0.05f, 0.05f)
+            ->setUniform("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f)
+            ->setUniform("pointLights[1].specular", 1.0f, 1.0f, 1.0f)
+            ->setUniform("pointLights[1].constant", 1.0f)
+            ->setUniform("pointLights[1].linear", 0.09f)
+            ->setUniform("pointLights[1].quadratic", 0.032f)
+            // point light 3
+            ->setUniform("pointLights[2].position", pointLightPositions[2])
+            ->setUniform("pointLights[2].ambient", 0.05f, 0.05f, 0.05f)
+            ->setUniform("pointLights[2].specular", 1.0f, 1.0f, 1.0f)
+            ->setUniform("pointLights[2].constant", 1.0f)
+            ->setUniform("pointLights[2].linear", 0.09f)
+            ->setUniform("pointLights[2].quadratic", 0.032f)
+            // point light 4
+            ->setUniform("pointLights[3].position", pointLightPositions[3])
+            ->setUniform("pointLights[3].ambient", 0.05f, 0.05f, 0.05f)
+            ->setUniform("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f)
+            ->setUniform("pointLights[3].specular", 1.0f, 1.0f, 1.0f)
+            ->setUniform("pointLights[3].constant", 1.0f)
+            ->setUniform("pointLights[3].linear", 0.09f)
+            ->setUniform("pointLights[3].quadratic", 0.032f)
+            // spotLight
+            ->setUniform("spotLights[0].position", camera.position)
+            ->setUniform("spotLights[0].direction", camera.front)
+            ->setUniform("spotLights[0].ambient", 0.0f, 0.0f, 0.0f)
+            ->setUniform("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f)
+            ->setUniform("spotLights[0].specular", 1.0f, 1.0f, 1.0f)
+            ->setUniform("spotLights[0].constant", 1.0f)
+            ->setUniform("spotLights[0].linear", 0.09f)
+            ->setUniform("spotLights[0].quadratic", 0.032f)
+            ->setUniform("spotLights[0].innerCutOff", glm::cos(glm::radians(12.5f)))
+            ->setUniform("spotLights[0].outerCutOff", glm::cos(glm::radians(15.0f)))
+            ->setUniform("lightCount[0]", 1)
+            ->setUniform("lightCount[1]", 4)
+            ->setUniform("lightCount[2]", 1)
             ->setUniform("view", view)
-            ->setUniform("projection", projection)
-            ->setUniform("model", model);
+            ->setUniform("projection", projection);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            // calculate the model matrix for each object and pass it to shader before drawing
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            shader->setUniform("model", model);
 
-        // also draw the lamp object
-        glm::mat4 lightModel = glm::mat4(1.0f);
-        lightModel = glm::translate(lightModel, lightPos);
-        lightModel = glm::scale(lightModel, glm::vec3(0.2f)); // a smaller cube
-        lightShader->use()->setUniform("view", view)->setUniform("projection", projection)->setUniform("model", lightModel);
-        glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     glDeleteVertexArrays(1, &VAO);
-    glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
     
     delete shader;
     shader = NULL;
-    delete lightShader;
-    lightShader = NULL;
     delete texture1;
     texture1 = NULL;
     delete texture2;
