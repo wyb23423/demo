@@ -1,4 +1,4 @@
-#include "texture.h";
+#include "texture.h"
 
 Texture* Texture::setFilename(const char* filename) {
 	if (filename == src) {
@@ -14,6 +14,11 @@ Texture* Texture::setFilename(const char* filename) {
 Texture::Texture(const char* filename) {
 	glGenTextures(1, &ID);
 	setFilename(filename);
+}
+
+Texture::~Texture() {
+	deleteImageCache(src.c_str());
+	glDeleteTextures(1, &ID);
 }
 
 bool Texture::use() {

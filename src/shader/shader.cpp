@@ -5,7 +5,7 @@ std::string Shader::getVertexCode() {
     return vertexCode;
 }
 Shader* const Shader::setVertexCode(const GLchar* path) {
-    loadCode(path, VERTEX);
+    loadCode(path, SHARDER_TYPE::VERTEX);
     return this;
 }
 Shader* const Shader::setVertexCode(const std::string &source) {
@@ -17,12 +17,16 @@ std::string Shader::getFragmentCode() {
     return fragmentCode;
 }
 Shader* const Shader::setFragmentCode(const GLchar* path) {
-    loadCode(path, FRAGMENT);
+    loadCode(path, SHARDER_TYPE::FRAGMENT);
     return this;
 }
 Shader* const Shader::setFragmentCode(const std::string &source) {
     fragmentCode = source;
     return this;
+}
+
+Shader::~Shader() {
+    glDeleteProgram(ID);
 }
 
 bool Shader::compile() {
@@ -131,10 +135,10 @@ void Shader::loadCode(const GLchar* path, SHARDER_TYPE type) {
         shaderFile.close();
         // 转换数据流到string
         switch (type) {
-            case VERTEX:
+        case SHARDER_TYPE::VERTEX:
                 vertexCode = shaderStream.str();
                 break;
-            case FRAGMENT:
+        case SHARDER_TYPE::FRAGMENT:
                 fragmentCode = shaderStream.str();
                 break;
             default: break;

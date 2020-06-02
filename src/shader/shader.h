@@ -11,7 +11,7 @@
 #include <sstream>
 #include <iostream>
 
-enum SHARDER_TYPE { VERTEX, FRAGMENT };
+enum class SHARDER_TYPE { VERTEX, FRAGMENT };
 
 class Shader {
 public:
@@ -22,6 +22,8 @@ public:
     std::string getFragmentCode();
     Shader* const setFragmentCode(const GLchar* path);
     Shader* const setFragmentCode(const std::string &source);
+
+    ~Shader();
 
     // 构建着色器
     bool compile();

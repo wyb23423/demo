@@ -25,6 +25,12 @@ bool deleteImageCache(const char* filename);
 // 清空图片缓存数据
 void clearImageCahe();
 
+enum class TEXTURE_TYPE {
+	NORMAL, // 普通纹理
+	DIFFUSE, // 漫反射贴图
+	SPECULAR // 镜面光贴图
+};
+
 class Texture {
 public:
 	// 激活纹理单元
@@ -38,6 +44,7 @@ public:
 
 	// 纹理单元
 	unsigned int unit = 0;
+	TEXTURE_TYPE type = TEXTURE_TYPE::NORMAL; //  纹理类型
 
 	// 纹理环绕方式
 	int wraps = GL_REPEAT;
@@ -45,12 +52,13 @@ public:
 	float borderColor[4] = { 0.0f }; // 边缘颜色。适用于环绕是GL_CLAMP_TO_BORDER时
 
 	// 纹理过滤
-	int minFilter = GL_NEAREST;
-	int magFilter = GL_NEAREST;
+	int minFilter = GL_LINEAR_MIPMAP_LINEAR;
+	int magFilter = GL_LINEAR;
 
 	Texture* setFilename(const char* filename);
 
 	Texture(const char* filename = "");
+	~Texture();
 
 	// 加载并使用纹理配置
 	bool use(); // 自动设置多级渐远纹理的级别
