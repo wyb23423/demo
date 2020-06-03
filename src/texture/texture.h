@@ -5,6 +5,7 @@
 
 #include <string>
 #include <glad/glad.h>
+#include <assimp/material.h>
 
 using namespace std;
 
@@ -25,12 +26,6 @@ bool deleteImageCache(const char* filename);
 // 清空图片缓存数据
 void clearImageCahe();
 
-enum class TEXTURE_TYPE {
-	NORMAL, // 普通纹理
-	DIFFUSE, // 漫反射贴图
-	SPECULAR // 镜面光贴图
-};
-
 class Texture {
 public:
 	// 激活纹理单元
@@ -44,7 +39,7 @@ public:
 
 	// 纹理单元
 	unsigned int unit = 0;
-	TEXTURE_TYPE type = TEXTURE_TYPE::NORMAL; //  纹理类型
+	aiTextureType type = aiTextureType_NONE; //  纹理类型
 
 	// 纹理环绕方式
 	int wraps = GL_REPEAT;
@@ -75,6 +70,9 @@ protected:
 
 	unsigned int ID = 0;
 	string src = "";
+
+	// 是否加载过纹理数据
+	bool isLoaded = false;
 
 	// 加载并配置纹理
 	ImageData* _use();

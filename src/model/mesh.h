@@ -25,6 +25,7 @@ public:
     vector<Vertex> vertices;
 
     Mesh(vector<Vertex> vertices, vector<Texture*> textures, vector<unsigned int> indices);
+    Mesh(Mesh* mesh);
     ~Mesh();
 
     void paint(Shader* shader);

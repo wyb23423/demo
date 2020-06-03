@@ -8,8 +8,12 @@ static constexpr int CACHE_MAX_SIZE = 5000; // 最大缓存数
 static map<const char*, ImageData*> TEXTDATA_CACHE;
 
 ImageData* loadImage(const char* filename) {
+	ImageData* imageData;
 	if (TEXTDATA_CACHE.count(filename)) {
-		return TEXTDATA_CACHE.at(filename);
+		imageData = TEXTDATA_CACHE.at(filename);
+		imageData->count++;
+
+		return imageData;
 	}
 
 	// 超过设置的最大缓存量, 先清空数据
@@ -22,11 +26,11 @@ ImageData* loadImage(const char* filename) {
 	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, STBI_default);
 
 	if (data) {
-		ImageData* imageData = (ImageData*)malloc(sizeof(ImageData));
+		imageData = (ImageData*)malloc(sizeof(ImageData));
 		imageData->width = width;
 		imageData->height = height;
 		imageData->data = data;
-		imageData->count = 0;
+		imageData->count = 1;
 		
 		switch (nrChannels) {
 		case STBI_grey:

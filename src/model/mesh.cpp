@@ -8,6 +8,14 @@ Mesh::Mesh(vector<Vertex> vertices, vector<Texture*> textures, vector<unsigned i
     setupMesh();
 }
 
+Mesh::Mesh(Mesh* mesh) {
+    vertices = mesh->vertices;
+    textures = mesh->textures;
+    indices = mesh->indices;
+
+    setupMesh();
+}
+
 Mesh::~Mesh() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
@@ -30,16 +38,16 @@ void Mesh::paint(Shader* shader) {
         string name = "";
         switch (textures[i]->type)
         {
-        case TEXTURE_TYPE::DIFFUSE:
+        case aiTextureType_DIFFUSE:
             number = to_string(diffuseNr++);
             name = "texture_diffuse";
             break;
-        case TEXTURE_TYPE::SPECULAR:
+        case aiTextureType_SPECULAR:
             number = to_string(specularNr++);
             name = "texture_specular";
             break;
         default:
-            cout << "Missing type: " << i << endl;
+            cout << "Unknown type: " << i << endl;
             continue;
         }
 

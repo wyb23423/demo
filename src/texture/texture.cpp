@@ -5,7 +5,10 @@ Texture* Texture::setFilename(const char* filename) {
 		return this;
 	}
 
-	deleteImageCache(src.c_str());
+	if (isLoaded) {
+		deleteImageCache(src.c_str());
+	}
+
 	src = filename;
 
 	return this;
@@ -83,6 +86,7 @@ ImageData* Texture::_use() {
 		glTexParameterfv(TARGET, GL_TEXTURE_BORDER_COLOR, borderColor);
 	}
 
-	imageData->count++; // 增加使用计数
+	isLoaded = true;
+
 	return imageData;
 }
