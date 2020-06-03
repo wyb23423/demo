@@ -51,7 +51,7 @@ void Mesh::paint(Shader* shader) {
             continue;
         }
 
-        shader->setUniform(("material." + name + number).c_str(), (int)textures[i]->unit);
+        shader->setUniform((name + number).c_str(), (int)textures[i]->unit);
     }
 
     glBindVertexArray(VAO);

@@ -70,6 +70,7 @@ Shader* const Shader::setUniform(const std::string &name, bool value) {
     return this;
 }
 Shader* const Shader::setUniform(const std::string &name, int value) {
+    int a = glGetUniformLocation(ID, name.c_str());
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
     return this;
 }
