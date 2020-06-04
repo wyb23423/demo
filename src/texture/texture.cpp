@@ -7,6 +7,7 @@ Texture* Texture::setFilename(const char* filename) {
 
 	if (isLoaded) {
 		deleteImageCache(src.c_str());
+		isLoaded = false;
 	}
 
 	src = filename;
@@ -39,7 +40,7 @@ bool Texture::use() {
 	return false;
 }
 
-bool Texture::use(int level) {
+bool Texture::use(const int level) {
 	ImageData* imageData = _use();
 	if (imageData) {
 		glTexImage2D(
@@ -86,7 +87,10 @@ ImageData* Texture::_use() {
 		glTexParameterfv(TARGET, GL_TEXTURE_BORDER_COLOR, borderColor);
 	}
 
-	isLoaded = true;
+	if (!isLoaded) {
+		imageData->count++; // 增加使用计数
+		isLoaded = true;
+	}
 
 	return imageData;
 }

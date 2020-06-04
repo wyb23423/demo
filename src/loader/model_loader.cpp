@@ -1,13 +1,9 @@
-#include "model.h"
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
-#include <map>
+#include "../mesh/mesh.h"
 
-static constexpr int CACHE_MAX_SIZE = 5000; // ×î´ó»º´æÊý
-static map<const string, vector<Mesh*>*> MODEL_CACHE;
+static map<const string, ModelData*> MODEL_CACHE;
 
 static vector<Texture*> loadMaterialTextures(
 	const aiMaterial* mat,
@@ -88,17 +84,7 @@ static void processNode(
 }
 
 // ====================================================
-void paintModel(const vector<Mesh*>* meshes, Shader* shader) {
-	for (unsigned int i = 0; i < meshes->size(); i++) {
-		meshes->at(i)->paint(shader);
-	}
-}
-
-void paintModel(const string path, Shader* shader) {
-	paintModel(loadModel(path), shader);
-}
-
-vector<Mesh*>* loadModel(const string path, unsigned int pFlags) {
+ModelData* loadModel(const string path, unsigned int pFlags) {
 	if (MODEL_CACHE.count(path)) {
 		return MODEL_CACHE.at(path);
 	}
@@ -111,18 +97,21 @@ vector<Mesh*>* loadModel(const string path, unsigned int pFlags) {
 	Assimp::Importer import;
 	const aiScene* scene = import.ReadFile(path, pFlags);
 
-	vector<Mesh*>* meshes = new vector<Mesh*>();
-
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
-	}
-	else {
-		processNode(scene->mRootNode, scene, meshes, path.substr(0, path.find_last_of('/')));
-		MODEL_CACHE[path] = meshes;
+		return NULL;
 	}
 
-	return meshes;
+	vector<Mesh*>* meshes = new vector<Mesh*>();
+	processNode(scene->mRootNode, scene, meshes, path.substr(0, path.find_last_of('/')));
+
+	ModelData* modelData = (ModelData*)malloc(sizeof(modelData));
+	modelData->data = meshes;
+	modelData->count = 0;
+	MODEL_CACHE[path] = modelData;
+
+	return modelData;
 }
 
 bool deleteModelCache(const string path) {
@@ -130,13 +119,15 @@ bool deleteModelCache(const string path) {
 		return false;
 	}
 
-	vector<Mesh*>* meshes = MODEL_CACHE.at(path);
-	for (unsigned i = 0; i < meshes->size(); i++) {
-		delete meshes->at(i);
-	}
-	delete meshes;
+	ModelData* modelData = MODEL_CACHE.at(path);
+	if (--modelData->count <= 0) {
+		for (unsigned i = 0; i < modelData->data->size(); i++) {
+			delete modelData->data->at(i);
+		}
+		delete modelData->data;
 
-	MODEL_CACHE.erase(path);
+		MODEL_CACHE.erase(path);
+	}
 
 	return true;
 }
@@ -146,13 +137,13 @@ void clearModelCache() {
 		return;
 	}
 
-	map<const string, vector<Mesh*>*>::iterator iter;
+	map<const string, ModelData*>::iterator iter;
 	for (iter = MODEL_CACHE.begin(); iter != MODEL_CACHE.end(); iter++) {
-		vector<Mesh*>* meshes = iter->second;
-		for (unsigned i = 0; i < meshes->size(); i++) {
-			delete meshes->at(i);
+		ModelData* modelData = iter->second;
+		for (unsigned i = 0; i < modelData->data->size(); i++) {
+			delete modelData->data->at(i);
 		}
-		delete meshes;
+		delete modelData->data;
 	}
 
 	MODEL_CACHE.clear();

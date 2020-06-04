@@ -1,19 +1,14 @@
 #include "stb_image.h"
-#include "texture.h"
-#include <map>
+#include "loader.h"
 #include <iostream>
 
-static constexpr int CACHE_MAX_SIZE = 5000; // 最大缓存数
+#include <glad/glad.h>
 
 static map<const char*, ImageData*> TEXTDATA_CACHE;
 
 ImageData* loadImage(const char* filename) {
-	ImageData* imageData;
 	if (TEXTDATA_CACHE.count(filename)) {
-		imageData = TEXTDATA_CACHE.at(filename);
-		imageData->count++;
-
-		return imageData;
+		return TEXTDATA_CACHE.at(filename);
 	}
 
 	// 超过设置的最大缓存量, 先清空数据
@@ -26,7 +21,7 @@ ImageData* loadImage(const char* filename) {
 	unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, STBI_default);
 
 	if (data) {
-		imageData = (ImageData*)malloc(sizeof(ImageData));
+		ImageData* imageData = (ImageData*)malloc(sizeof(ImageData));
 		imageData->width = width;
 		imageData->height = height;
 		imageData->data = data;
@@ -47,7 +42,6 @@ ImageData* loadImage(const char* filename) {
 			imageData->format = GL_RGB;
 			break;
 		}
-
 
 		return TEXTDATA_CACHE[filename] = imageData;
 	}

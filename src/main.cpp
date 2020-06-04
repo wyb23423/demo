@@ -1,7 +1,7 @@
-#include "camera/camera.h"
-#include "model/model.h"
+ï»¿#include "camera/camera.h"
+#include "mesh/mesh.h"
+#include "light/light.h"
 
-#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -53,7 +53,7 @@ int main()
     // ============================================configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
-    // =========================================================´´½¨×ÅÉ«Æ÷³ÌĞò
+    // =========================================================åˆ›å»ºç€è‰²å™¨ç¨‹åº
     Shader* shader = new Shader();
     if (shader == NULL) {
         std::cout << "Failed to initialize Shader" << std::endl;
@@ -62,15 +62,23 @@ int main()
     shader->setVertexCode("src/shader/vertex/shader1.vs")->setFragmentCode("src/shader/fragment/shader3.fs")->compile();
 
     // =========================================================
-    vector<Mesh*>* meshes = loadModel("src/model/obj/nanosuit/nanosuit.obj");
+    ModelData* model = loadModel("src/loader/obj/nanosuit/nanosuit.obj");
+    if (model == NULL) {
+        std::cout << "Failed to load Model" << std::endl;
+        return -1;
+    }
 
-    // positions of the point lights
-    glm::vec3 pointLightPositions[] = {
-        glm::vec3(0.7f,  0.2f,  2.0f),
-        glm::vec3(2.3f, -3.3f, -4.0f),
-        glm::vec3(-4.0f,  2.0f, -12.0f),
-        glm::vec3(0.0f,  0.0f, -3.0f)
-    };
+    vector<Mesh*>* meshes = model->data;
+
+    PointLight light1;
+    light1.position = glm::vec3(0.7f, 0.2f, 2.0f);
+    light1.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
+    light1.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+    light1.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+
+    PointLight light2;
+    light2.copyFrom(&light1);
+    light2.position = glm::vec3(2.3f, -3.3f, -4.0f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -92,26 +100,16 @@ int main()
             ->use()
             ->setUniform("viewPos", camera.position)
             ->setUniform("normalMatrix", normalMatrix)
-            // point light 1
-            ->setUniform("pointLights[0].position", pointLightPositions[0])
-            ->setUniform("pointLights[0].ambient", 0.05f, 0.05f, 0.05f)
-            ->setUniform("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f)
-            ->setUniform("pointLights[0].specular", 1.0f, 1.0f, 1.0f)
-            ->setUniform("pointLights[0].constant", 1.0f)
-            ->setUniform("pointLights[0].linear", 0.09f)
-            ->setUniform("pointLights[0].quadratic", 0.032f)
-            // point light 2
-            ->setUniform("pointLights[1].position", pointLightPositions[1])
-            ->setUniform("pointLights[1].ambient", 0.05f, 0.05f, 0.05f)
-            ->setUniform("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f)
-            ->setUniform("pointLights[1].specular", 1.0f, 1.0f, 1.0f)
-            ->setUniform("pointLights[1].constant", 1.0f)
-            ->setUniform("pointLights[1].linear", 0.09f)
-            ->setUniform("pointLights[1].quadratic", 0.032f)
             ->setUniform("view", view)
             ->setUniform("projection", projection)
             ->setUniform("model", model);
-        paintModel(meshes, shader);
+
+        light1.use(shader, 0);
+        light2.use(shader, 1);
+
+        for (unsigned i = 0; i < meshes->size(); i++) {
+            meshes->at(i)->paint(shader);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

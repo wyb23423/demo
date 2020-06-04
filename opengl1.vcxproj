@@ -159,18 +159,20 @@
     <ClCompile Include="assets\glad.c" />
     <ClCompile Include="assets\stb_image.cpp" />
     <ClCompile Include="src\camera\camera.cpp" />
+    <ClCompile Include="src\light\light.cpp" />
+    <ClCompile Include="src\loader\image_loader.cpp" />
+    <ClCompile Include="src\loader\model_loader.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\model\mesh.cpp" />
-    <ClCompile Include="src\model\model.cpp" />
+    <ClCompile Include="src\mesh\mesh.cpp" />
     <ClCompile Include="src\shader\shader.cpp" />
-    <ClCompile Include="src\texture\image_loader.cpp" />
     <ClCompile Include="src\texture\texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\include\stb_image.h" />
     <ClInclude Include="src\camera\camera.h" />
-    <ClInclude Include="src\model\mesh.h" />
-    <ClInclude Include="src\model\model.h" />
+    <ClInclude Include="src\light\light.h" />
+    <ClInclude Include="src\loader\loader.h" />
+    <ClInclude Include="src\mesh\mesh.h" />
     <ClInclude Include="src\shader\shader.h" />
     <ClInclude Include="src\texture\texture.h" />
   </ItemGroup>

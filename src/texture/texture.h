@@ -4,27 +4,10 @@
 #define TEXTURE_H
 
 #include <string>
-#include <glad/glad.h>
 #include <assimp/material.h>
+#include <glad/glad.h>
 
-using namespace std;
-
-// =====================================loader
-typedef struct _ImageData
-{
-	int count; // 使用次数
-	int width;
-	int height;
-	unsigned int format;
-	unsigned char* data;
-} ImageData;
-
-// 加载图片数据。如果已存在直接返回缓存数据
-ImageData* loadImage(const char* filename);
-// 根据键名删除图片缓存数据
-bool deleteImageCache(const char* filename);
-// 清空图片缓存数据
-void clearImageCahe();
+#include "../loader/loader.h"
 
 class Texture {
 public:
@@ -57,7 +40,7 @@ public:
 
 	// 加载并使用纹理配置
 	bool use(); // 自动设置多级渐远纹理的级别
-	bool use(int level); //  手动设置多级渐远纹理的级别
+	bool use(const int level); //  手动设置多级渐远纹理的级别
 
 	// 绑定纹理
 	void bind();
