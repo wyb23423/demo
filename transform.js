@@ -21,12 +21,17 @@ function visitor(source, path) {
         },
     }).visit(ast)
 
+    // 不知道怎么出现了属性(类型还是一样的)重复, 重载???
+    const set = new Set()
+
     let filedType = ''
     createVisitor({
         visitClassOrInterfaceType(ctx) {
             const type = ctx.text
-                .replace(/String|Short/g, 'string')
-                .replace(/Integer|Long|BigDecimal/g, 'number')
+                .replace(/Integer|Long|BigDecimal|Double|Short|LocalDateTime/g, 'number')
+                .replace(/String|LocalDate/g, 'string')
+                .replace('Boolean', 'boolean')
+                .replace('Map', 'Record')
                 .replace('List', 'Array')
 
             if (hasExtends) {
@@ -39,14 +44,19 @@ function visitor(source, path) {
         visitPrimitiveType(ctx) {
             if (ctx.BOOLEAN()) {
                 filedType = 'boolean'
-            } else if (ctx.CHAR() || ctx.SHORT()) {
+            } else if (ctx.CHAR()) {
                 filedType = 'string'
             } else {
                 filedType = 'number'
             }
         },
         visitVariableDeclaratorId(ctx) {
+            if (set.has(ctx.text)) {
+                return
+            }
+
             stream.write(`  ${ctx.text}: ${filedType};\n`)
+            set.add(ctx.text)
         },
     }).visit(ast)
 
