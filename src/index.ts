@@ -14,4 +14,4 @@
 // app.listen(8082);
 
 import { doGenPasswd } from './password/demo';
-console.log(doGenPasswd('bilibili.com', '13541062430', { symbol: true }));
+console.log(doGenPasswd('www.blackshark.com', '残梦', { len: 11 }));
